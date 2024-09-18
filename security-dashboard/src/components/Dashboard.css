@@ -8,7 +8,7 @@
 }
 
 .menu-open .main-content {
-  margin-left: 250px; /* Adjust according to sidebar width */
+  margin-left: 250px; 
 }
 
 /* Top Bar */
@@ -86,13 +86,13 @@
 }
 
 .alerts-heading {
-  font-size: 1.75rem; /* Larger font size for emphasis */
-  font-weight: 700;   /* Bold text */
-  color: #333;        /* Darker text color for better readability */
-  border-bottom: 2px solid #ff5100; /* Underline with a color */
-  padding-bottom: 0.5rem; /* Space between text and underline */
-  margin-bottom: 1rem; /* Space below the heading */
-  text-transform: uppercase; /* Uppercase for a stronger presence */
+  font-size: 1.75rem; 
+  font-weight: 700;  
+  color: #333;        
+  border-bottom: 2px solid #ff5100; 
+  padding-bottom: 0.5rem; 
+  margin-bottom: 1rem; 
+  text-transform: uppercase; 
 }
 
 /* Arrow for Collapsing Side Menu */
@@ -128,27 +128,25 @@
   margin-bottom: 0.5rem;
 }
 
-/* Enhanced Clear Filters Button Styles */
-/* Enhanced Clear Filters Button Styles with Reduced Height */
 .clear-filters-btn {
   display: inline-block;
-  padding: 0.25rem 0.75rem; /* Further reduced vertical and horizontal padding */
+  padding: 0.25rem 0.75rem; 
   background-color: #dc3545;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  font-size: 0.75rem; /* Smaller font size */
+  font-size: 0.75rem; 
   font-weight: bold;
   text-align: center;
   text-transform: uppercase;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .clear-filters-btn:hover {
   background-color: #c82333;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Adjusted shadow size for hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); 
   transform: translateY(-1px);
 }
 
