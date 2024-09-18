@@ -74,35 +74,35 @@ def add_dummy_data():
         {"id": 16, "name": "Alert16", "description": "Multi_alert_Attack", "machine": "Machine 4", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
         {"id": 17, "name": "Alert17", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 4", "occurred_on": "2022-07-19 22:51:33.673080", "severity": "Medium", "program": "winword.exe"},
         {"id": 18, "name": "Alert18", "description": "Execution - SysInternals Use", "machine": "Machine 4", "occurred_on": "2022-07-19 22:33:12.585314", "severity": "Medium", "program": "sysmon.exe"},
-        {"id": 19, "name": "Alert19", "description": "Multi_alert_Attack", "machine": "Machine 4", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
+        {"id": 19, "name": "Alert19", "description": "Multi_alert_Attack", "machine": "Machine 4", "occurred_on": "Varied", "severity": "High", "program": "Varied"},
         {"id": 20, "name": "Alert20", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 4", "occurred_on": "2022-07-19 22:39:55.364566", "severity": "Medium", "program": "excel.exe"},
-        {"id": 21, "name": "Alert21", "description": "Persistence - Office Application Startup - Word", "machine": "Machine 4", "occurred_on": "2022-07-19 22:52:18.134623", "severity": "Medium", "program": "excel.exe"},
+        {"id": 21, "name": "Alert21", "description": "Persistence - Office Application Startup - Word", "machine": "Machine 4", "occurred_on": "2022-07-19 22:52:18.134623", "severity": "High", "program": "excel.exe"},
         {"id": 22, "name": "Alert22", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 4", "occurred_on": "2022-07-19 22:33:51.429382", "severity": "Medium", "program": "svchost.exe"},
-        {"id": 23, "name": "Alert23", "description": "Execution - SysInternals Use", "machine": "Machine 5", "occurred_on": "2022-07-19 23:16:03.533664", "severity": "Medium", "program": "sysmon.exe"},
-        {"id": 24, "name": "Alert24", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 5", "occurred_on": "2022-07-19 23:34:43.607096", "severity": "Medium", "program": "svchost.exe"},
+        {"id": 23, "name": "Alert23", "description": "Execution - SysInternals Use", "machine": "Machine 5", "occurred_on": "2022-07-19 23:16:03.533664", "severity": "Low", "program": "sysmon.exe"},
+        {"id": 24, "name": "Alert24", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 5", "occurred_on": "2022-07-19 23:34:43.607096", "severity": "Low", "program": "svchost.exe"},
         {"id": 25, "name": "Alert25", "description": "Privilege Escalation - Svchost Launching HTA (CVE 2017-0199)", "machine": "Machine 5", "occurred_on": "2022-07-19 23:27:58.204449", "severity": "Medium", "program": "mshta.exe"},
-        {"id": 26, "name": "Alert26", "description": "Multi_alert_Attack", "machine": "Machine 5", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
+        {"id": 26, "name": "Alert26", "description": "Multi_alert_Attack", "machine": "Machine 5", "occurred_on": "Varied", "severity": "High", "program": "Varied"},
         {"id": 27, "name": "Alert27", "description": "Defense Evasion - MSHTA Launching Script Interpreters", "machine": "Machine 5", "occurred_on": "2022-07-19 23:39:33.667795", "severity": "Medium", "program": "mshta.exe"},
-        {"id": 28, "name": "Alert28", "description": "Multi_alert_Attack", "machine": "Machine 5", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
+        {"id": 28, "name": "Alert28", "description": "Multi_alert_Attack", "machine": "Machine 5", "occurred_on": "Varied", "severity": "High", "program": "Varied"},
         {"id": 29, "name": "Alert29", "description": "Persistence - Office Application Startup - Word", "machine": "Machine 5", "occurred_on": "2022-07-19 23:28:10.916872", "severity": "Medium", "program": "excel.exe"},
-        {"id": 30, "name": "Alert30", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 5", "occurred_on": "2022-07-19 23:15:34.143212", "severity": "Medium", "program": "svchost.exe"},
+        {"id": 30, "name": "Alert30", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 5", "occurred_on": "2022-07-19 23:15:34.143212", "severity": "High", "program": "svchost.exe"},
         {"id": 31, "name": "Alert31", "description": "Privilege Escalation - Svchost Launching HTA (CVE 2017-0199)", "machine": "Machine 5", "occurred_on": "2022-07-19 23:31:10.872194", "severity": "Medium", "program": "mshta.exe"},
-        {"id": 32, "name": "Alert32", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 5", "occurred_on": "2022-07-19 23:27:31.183202", "severity": "Medium", "program": "winword.exe"},
+        {"id": 32, "name": "Alert32", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 5", "occurred_on": "2022-07-19 23:27:31.183202", "severity": "High", "program": "winword.exe"},
         {"id": 33, "name": "Alert33", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 5", "occurred_on": "2022-07-19 23:39:10.379754", "severity": "Medium", "program": "winword.exe"},
         {"id": 34, "name": "Alert34", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 5", "occurred_on": "2022-07-19 23:31:12.765302", "severity": "Medium", "program": "winword.exe"},
         {"id": 35, "name": "Alert35", "description": "Execution - SysInternals Use", "machine": "Machine 5", "occurred_on": "2022-07-19 23:39:32.999793", "severity": "Medium", "program": "sysmon.exe"},
-        {"id": 36, "name": "Alert36", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 5", "occurred_on": "2022-07-19 23:32:35.511156", "severity": "Medium", "program": "winword.exe"},
+        {"id": 36, "name": "Alert36", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 5", "occurred_on": "2022-07-19 23:32:35.511156", "severity": "High", "program": "winword.exe"},
         {"id": 37, "name": "Alert37", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 5", "occurred_on": "2022-07-19 23:26:25.333501", "severity": "Medium", "program": "winword.exe"},
-        {"id": 38, "name": "Alert38", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 5", "occurred_on": "2022-07-19 23:19:31.916855", "severity": "Medium", "program": "excel.exe"},
-        {"id": 39, "name": "Alert39", "description": "Defense Evasion - Powershell Executing Hidden - Encoded Commands", "machine": "Machine 5", "occurred_on": "2022-07-19 23:39:35.360198", "severity": "Medium", "program": "powershell.exe"},
+        {"id": 38, "name": "Alert38", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 5", "occurred_on": "2022-07-19 23:19:31.916855", "severity": "Low", "program": "excel.exe"},
+        {"id": 39, "name": "Alert39", "description": "Defense Evasion - Powershell Executing Hidden - Encoded Commands", "machine": "Machine 5", "occurred_on": "2022-07-19 23:39:35.360198", "severity": "High", "program": "powershell.exe"},
         {"id": 40, "name": "Alert40", "description": "Multi_alert_Attack", "machine": "Machine 6", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
-        {"id": 41, "name": "Alert41", "description": "Execution - SysInternals Use", "machine": "Machine 6", "occurred_on": "2022-07-19 23:58:52.870803", "severity": "Medium", "program": "sysmon.exe"},
+        {"id": 41, "name": "Alert41", "description": "Execution - SysInternals Use", "machine": "Machine 6", "occurred_on": "2022-07-19 23:58:52.870803", "severity": "Low", "program": "sysmon.exe"},
         {"id": 42, "name": "Alert42", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 6", "occurred_on": "2022-07-19 23:58:52.251768", "severity": "Medium", "program": "excel.exe"},
         {"id": 43, "name": "Alert43", "description": "Persistence - Office Application Startup - normal.dotm", "machine": "Machine 6", "occurred_on": "2022-07-20 00:10:04.081662", "severity": "Medium", "program": "winword.exe"},
-        {"id": 44, "name": "Alert44", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 6", "occurred_on": "2022-07-19 23:55:13.490944", "severity": "Medium", "program": "svchost.exe"},
-        {"id": 45, "name": "Alert45", "description": "Multi_alert_Attack", "machine": "Machine 6", "occurred_on": "Varied", "severity": "Medium", "program": "Varied"},
-        {"id": 46, "name": "Alert46", "description": "Persistence - Office Application Startup - Word", "machine": "Machine 6", "occurred_on": "2022-07-20 00:04:56.790381", "severity": "Medium", "program": "excel.exe"},
-        {"id": 47, "name": "Alert47", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 6", "occurred_on": "2022-07-20 00:09:54.846445", "severity": "Medium", "program": "winword.exe"},
+        {"id": 44, "name": "Alert44", "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected", "machine": "Machine 6", "occurred_on": "2022-07-19 23:55:13.490944", "severity": "Low", "program": "svchost.exe"},
+        {"id": 45, "name": "Alert45", "description": "Multi_alert_Attack", "machine": "Machine 6", "occurred_on": "Varied", "severity": "Low", "program": "Varied"},
+        {"id": 46, "name": "Alert46", "description": "Persistence - Office Application Startup - Word", "machine": "Machine 6", "occurred_on": "2022-07-20 00:04:56.790381", "severity": "Low", "program": "excel.exe"},
+        {"id": 47, "name": "Alert47", "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries", "machine": "Machine 6", "occurred_on": "2022-07-20 00:09:54.846445", "severity": "Low", "program": "winword.exe"},
     ]
     # Iterate over the dummy alerts and check if they exist in the database
     for alert_data in alerts:
@@ -196,8 +196,8 @@ def get_alerts():
     global uploadCount
     try:
         if uploadCount > 1:
-            alerts = Alert.query.with_entities(Alert.id, Alert.name, Alert.description).all()
-            alert_list = [{'id': alert.id, 'name': alert.name, 'description': alert.description} for alert in alerts]
+            alerts = Alert.query.with_entities(Alert.id, Alert.name, Alert.description, Alert.machine, Alert.occurred_on, Alert.severity).all()
+            alert_list = [{'id': alert.id, 'name': alert.name, 'description': alert.description, 'machine': alert.machine, 'occurred_on': alert.occurred_on, 'severity': alert.severity} for alert in alerts]
         else:
             alert_list = []
 

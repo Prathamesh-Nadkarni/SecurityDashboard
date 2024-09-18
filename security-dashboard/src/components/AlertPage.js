@@ -22,6 +22,14 @@ const AlertPage = () => {
 
   return (
     <div className="p-10">
+      {/* Back to Dashboard Button */}
+      <button
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
+        onClick={() => navigate('/login')}
+      >
+        Back to Dashboard
+      </button>
+
       <h1 className="text-2xl mb-4">Alert {alertId}</h1>
       <table className="table-auto w-full">
         <tbody>
