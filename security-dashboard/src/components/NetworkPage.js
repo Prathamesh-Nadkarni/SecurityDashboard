@@ -14,16 +14,15 @@ const NetworkPage = () => {
   const [clickedEdge, setClickedEdge] = useState(null);
   const [clickedNode, setClickedNode] = useState(null);
   const [showTransparent, setShowTransparent] = useState(false);
-  const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoom detection
+  const [isZoomedIn, setIsZoomedIn] = useState(false);
   const navigate = useNavigate();
 
-  // Function to check zoom level and update the state
   const checkZoomLevel = () => {
     const scale = window.visualViewport.scale;
     if (scale > 1) {
-      setIsZoomedIn(true); // Hide buttons if zoomed in
+      setIsZoomedIn(true); 
     } else {
-      setIsZoomedIn(false); // Show buttons if not zoomed in
+      setIsZoomedIn(false);
     }
   };
 
@@ -32,10 +31,8 @@ const NetworkPage = () => {
     setEdges([]);
     setLoading(true);
 
-    // Event listener to monitor zoom level changes
     window.visualViewport.addEventListener('resize', checkZoomLevel);
-    checkZoomLevel(); // Check initial zoom level
-
+    checkZoomLevel();
     axios.get(`http://127.0.0.1:5000/api/network/${alertId}`)
       .then(response => {
         const { nodes, edges } = response.data;
@@ -85,7 +82,6 @@ const NetworkPage = () => {
         setLoading(false);
       });
 
-    // Clean up event listener when component unmounts
     return () => {
       window.visualViewport.removeEventListener('resize', checkZoomLevel);
     };
@@ -119,7 +115,7 @@ const NetworkPage = () => {
   };
 
   const goBack = () => {
-    navigate(-1); // This will go back to the previous page in history
+    navigate(-1);
   };
 
   if (loading) {
@@ -207,7 +203,7 @@ const NetworkPage = () => {
 
   return (
     <div className="network-container">
-      {!isZoomedIn && ( // Conditionally render buttons based on zoom level
+      {!isZoomedIn && (
         <>
           <button
             className="floating-back-button bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded"
