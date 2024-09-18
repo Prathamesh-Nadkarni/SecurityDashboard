@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'; 
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Graph from 'react-vis-network-graph';
 import { Rnd } from 'react-rnd';
@@ -14,11 +14,27 @@ const NetworkPage = () => {
   const [clickedEdge, setClickedEdge] = useState(null);
   const [clickedNode, setClickedNode] = useState(null);
   const [showTransparent, setShowTransparent] = useState(false);
+  const [isZoomedIn, setIsZoomedIn] = useState(false); // New state for zoom detection
+  const navigate = useNavigate();
+
+  // Function to check zoom level and update the state
+  const checkZoomLevel = () => {
+    const scale = window.visualViewport.scale;
+    if (scale > 1) {
+      setIsZoomedIn(true); // Hide buttons if zoomed in
+    } else {
+      setIsZoomedIn(false); // Show buttons if not zoomed in
+    }
+  };
 
   useEffect(() => {
     setNodes([]);
     setEdges([]);
     setLoading(true);
+
+    // Event listener to monitor zoom level changes
+    window.visualViewport.addEventListener('resize', checkZoomLevel);
+    checkZoomLevel(); // Check initial zoom level
 
     axios.get(`http://127.0.0.1:5000/api/network/${alertId}`)
       .then(response => {
@@ -68,6 +84,11 @@ const NetworkPage = () => {
         console.error('Error fetching network data:', error);
         setLoading(false);
       });
+
+    // Clean up event listener when component unmounts
+    return () => {
+      window.visualViewport.removeEventListener('resize', checkZoomLevel);
+    };
   }, [alertId]);
 
   const handleNodeClick = (event) => {
@@ -95,6 +116,10 @@ const NetworkPage = () => {
 
   const toggleTransparentEdges = () => {
     setShowTransparent(prevState => !prevState);
+  };
+
+  const goBack = () => {
+    navigate(-1); // This will go back to the previous page in history
   };
 
   if (loading) {
@@ -142,7 +167,6 @@ const NetworkPage = () => {
     nodes: filteredNodes.map(node => {
       let label = node.label;
 
-      // Apply the file path shortening for file nodes
       if (node.type === 'file' && node.label !== 'comb-file') {
         label = formatFilePath(node.label);
       }
@@ -150,18 +174,18 @@ const NetworkPage = () => {
       return {
         id: node.id,
         label: label,
-        title: node.type === 'file' ? node.label : '', // Full path shown on hover
+        title: node.type === 'file' ? node.label : '',
         x: node.x,
         y: node.y,
         shape: node.type === 'process' ? 'circle' :
                node.type === 'socket' ? 'diamond' :
-               'box', // File node is represented as a box
+               'box',
         size: node.type === 'socket' ? 40 : 20,
         font: { size: node.type === 'socket' ? 10 : 14, vadjust: node.type === 'socket' ? -50 : 0 },
         color: {
-          background: node.transparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)", // Light blue with 50% opacity if transparent, otherwise default color
-          border: "#2B7CE9", // Border color remains the same
-          highlight: { background: node.transparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF", border: "#2B7CE9" }, // Light highlight color with 50% opacity if transparent, otherwise default highlight color
+          background: node.transparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)",
+          border: "#2B7CE9",
+          highlight: { background: node.transparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF", border: "#2B7CE9" },
         },
         className: node.transparent && !showTransparent ? 'transparent' : '',
       };
@@ -171,10 +195,10 @@ const NetworkPage = () => {
       from: edge.source,
       to: edge.target,
       label: edge.label,
-      color: edge.alname && edge.transparent ? '#ff9999' : // Light red for both alname and transparent
-              edge.alname ? '#ff0000' :                  // Bright red for alname only
-              edge.transparent ? '#d3d3d3' :             // Light gray for transparent only
-              '#000000',                                // Black for neither
+      color: edge.alname && edge.transparent ? '#ff9999' :
+              edge.alname ? '#ff0000' :
+              edge.transparent ? '#d3d3d3' :
+              '#000000',
       id: `${edge.source}-${edge.target}`,
       font: { size: 12, align: 'horizontal', background: 'white', strokeWidth: 0 },
       className: edge.transparent && !showTransparent ? 'transparent' : '',
@@ -183,9 +207,22 @@ const NetworkPage = () => {
 
   return (
     <div className="network-container">
-      <button className="toggle-button" onClick={toggleTransparentEdges}>
-        {showTransparent ? "Hide Transparent Edges" : "Show Transparent Edges"}
-      </button>
+      {!isZoomedIn && ( // Conditionally render buttons based on zoom level
+        <>
+          <button
+            className="floating-back-button bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded"
+            onClick={goBack}
+          >
+            Back
+          </button>
+          <button
+            className="floating-toggle-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+            onClick={toggleTransparentEdges}
+          >
+            {showTransparent ? "Hide Transparent Edges" : "Show Transparent Edges"}
+          </button>
+        </>
+      )}
       <div id="network-visualization">
         <Graph
           key={uuid()}
@@ -197,21 +234,28 @@ const NetworkPage = () => {
           }}
         />
         {clickedEdge && clickedEdge.alname && (
-          <Rnd default={{ x: 50, y: 50, width: 250, height: 150 }} bounds="parent">
-            <div className="popup popup-edge">
-              <button className="close-button" onClick={handleClosePopup}>X</button>
-              <p>Alert: {clickedEdge.alname}</p>
+          <Rnd default={{ x: 50, y: 50, width: 250, height: 120 }} minWidth={250} minHeight={120}>
+            <div className="edge-popup">
+              <div>
+                <strong>Edge Type:</strong> {clickedEdge.alname}
+              </div>
+              <div>
+                <strong>Edge Time:</strong> {clickedEdge.time}
+              </div>
+              <button onClick={handleClosePopup}>Close</button>
             </div>
           </Rnd>
         )}
-        {clickedNode && clickedNode.nodes && (
-          <Rnd default={{ x: 150, y: 150, width: 300, height: 200 }} bounds="parent">
-            <div className="popup popup-node scrollable-popup">
-              <button className="close-button" onClick={handleClosePopup}>X</button>
-              <p>Names:</p>
-              {clickedNode.nodes.map((name, index) => (
-                <p key={index}>{name}</p>
-              ))}
+        {clickedNode && (
+          <Rnd default={{ x: 50, y: 50, width: 250, height: 120 }} minWidth={250} minHeight={120}>
+            <div className="node-popup">
+              <div>
+                <strong>Node Name:</strong> {clickedNode.label}
+              </div>
+              <div>
+                <strong>Node Rank:</strong> {clickedNode.rank || 'N/A'}
+              </div>
+              <button onClick={handleClosePopup}>Close</button>
             </div>
           </Rnd>
         )}
@@ -221,4 +265,3 @@ const NetworkPage = () => {
 };
 
 export default NetworkPage;
-
