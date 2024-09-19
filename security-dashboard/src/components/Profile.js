@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState({ name: '', email: '', username: '', password: '', picture: '' });
+  const [userInfo, setUserInfo] = useState({ name: '', email: '', username: '', picture: '' });
   const [editMode, setEditMode] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
@@ -42,7 +42,6 @@ const Profile = () => {
     formData.append('name', userInfo.name);
     formData.append('email', userInfo.email);
     formData.append('username', userInfo.username);
-    formData.append('password', userInfo.password);
     if (newPicture) {
       formData.append('picture', newPicture);
     }
@@ -69,6 +68,10 @@ const Profile = () => {
 
   const handleHomeClick = () => {
     navigate('/'); 
+  };
+
+  const handleResetPassword = () => {
+    navigate('/reset-password'); // Navigate to a reset password page (you'll need to create this page if not done yet)
   };
 
   return (
@@ -98,12 +101,9 @@ const Profile = () => {
         ) : (
           <p>{userInfo.username}</p>
         )}
-        <label>Password:</label>
-        {editMode ? (
-          <input type="password" name="password" value={userInfo.password} onChange={handleChange} />
-        ) : (
-          <p>********</p>
-        )}
+        <div className="reset-password-section">
+          <button className="reset-password-button" onClick={handleResetPassword}>Reset Password</button>
+        </div>
         {editMode ? (
           <button className={isChanged ? 'save-button active' : 'save-button'} onClick={handleSave}>Save</button>
         ) : (
