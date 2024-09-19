@@ -1,8 +1,7 @@
 .network-container {
   position: relative;
   width: 100%;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
+  height: 100vh;
 }
 
 #network-visualization {
@@ -11,66 +10,143 @@
   position: relative;
 }
 
-.floating-back-button,
-.floating-toggle-button {
+.floating-buttons {
   position: fixed;
-  z-index: 1000; 
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.floating-back-button {
   top: 10px;
   left: 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.floating-back-button,
+.floating-toggle-button {
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
 
 .floating-toggle-button {
-  top: 10px;
-  left: 120px;
+  z-index: 1000;
+}
+
+.search-input {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 250px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .edge-popup,
 .node-popup {
-  background-color: white;
+  background-color: #fff;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.edge-popup button,
-.node-popup button {
+.edge-popup strong,
+.node-popup strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+button {
   margin-top: 10px;
   padding: 5px 10px;
+  font-size: 14px;
   background-color: #007bff;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 3px;
   cursor: pointer;
 }
 
-.edge-popup button:hover,
-.node-popup button:hover {
+button:hover {
   background-color: #0056b3;
-}
-
-.hidden {
-  display: none;
 }
 
 .transparent {
   opacity: 0.5;
 }
 
-.transparent:hover {
-  opacity: 1;
+.highlighted {
+  background-color: #FFFF00 !important;
+  border-color: #ffeb3b;
 }
 
-.rnd {
-  z-index: 999; 
+.graph-node {
+  transition: background-color 0.3s ease;
+}
+
+.graph-edge {
+  transition: stroke 0.3s ease;
+}
+
+.graph-node.highlighted,
+.graph-edge.highlighted {
+  background-color: #FFFF00 !important;
+  stroke: #ffeb3b !important;
+}
+
+/* Sliding menu styles */
+.sliding-menu {
+  position: fixed;
+  top: 100px;
+  left: 10px; /* Increase this value to create more space from the left edge */
+  width: 200px;
   background-color: white;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   padding: 10px;
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateX(-220px); /* Hidden by default */
+  transition: transform 0.5s ease;
+  z-index: 1000;
+}
+
+.sliding-menu.visible {
+  transform: translateX(0); /* Slides in when visible */
+}
+
+/* Filter options */
+.filter-container {
+  margin-top: 20px;
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.filter-option {
+  margin-bottom: 10px;
+  display: flex; /* Added for better alignment */
+  flex-direction: column; /* Stack label and input vertically */
+}
+
+.filter-option label {
+  font-size: 14px; /* Ensures label is correctly sized */
+}
+
+.filter-option input {
+  margin-top: 5px; /* Space between label and input */
+  padding: 5px; /* Padding inside the input field */
+  font-size: 14px; /* Consistent font size */
+  border: 1px solid #ccc; /* Border to match the menu style */
+  border-radius: 5px; /* Rounded corners */
+  width: 100%; /* Ensures input field fills available width */
+  box-sizing: border-box; /* Includes padding and border in the width calculation */
 }

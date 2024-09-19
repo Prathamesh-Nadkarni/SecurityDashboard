@@ -85,7 +85,24 @@ const CreateUserPage = () => {
       }
     }
 
-    navigate('/login');
+    fetch('http://127.0.0.1:5000/api/create-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          navigate('/login');
+        } else {
+          setError('Failed to create user');
+        }
+      })
+      .catch(() => {
+        setError('Failed to create user');
+      });
   };
 
   const registerYubikeyCredential = async () => {

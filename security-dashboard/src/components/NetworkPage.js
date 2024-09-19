@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Graph from 'react-vis-network-graph';
 import { Rnd } from 'react-rnd';
 import './NetworkPage.css';
-import uuid from "react-uuid";
+import uuid from 'react-uuid';
 
 const NetworkPage = () => {
   const { alertId } = useParams();
@@ -13,78 +13,29 @@ const NetworkPage = () => {
   const [loading, setLoading] = useState(true);
   const [clickedEdge, setClickedEdge] = useState(null);
   const [clickedNode, setClickedNode] = useState(null);
-  const [showTransparent, setShowTransparent] = useState(false);
-  const [isZoomedIn, setIsZoomedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);  // State to track menu visibility
+  const [filterTransparent, setFilterTransparent] = useState(false); // State to track filter option
+  const [fileNameFilter, setFileNameFilter] = useState(''); // State to track file name filter
   const navigate = useNavigate();
-
-  const checkZoomLevel = () => {
-    const scale = window.visualViewport.scale;
-    if (scale > 1) {
-      setIsZoomedIn(true); 
-    } else {
-      setIsZoomedIn(false);
-    }
-  };
 
   useEffect(() => {
     setNodes([]);
     setEdges([]);
     setLoading(true);
 
-    window.visualViewport.addEventListener('resize', checkZoomLevel);
-    checkZoomLevel();
     axios.get(`http://127.0.0.1:5000/api/network/${alertId}`)
       .then(response => {
         const { nodes, edges } = response.data;
-
-        const sortedEdges = edges.sort((a, b) => new Date(a.time) - new Date(b.time));
-
-        const nodesByRank = nodes.reduce((acc, node) => {
-          const rank = node.rank || 0;
-          if (!acc[rank]) acc[rank] = [];
-          acc[rank].push(node);
-          return acc;
-        }, {});
-
-        const nodePositions = {};
-        const rankSpacingX = 200;
-        const ySpacing = 100;
-
-        Object.keys(nodesByRank).forEach(rank => {
-          const nodesInRank = nodesByRank[rank];
-          nodesInRank.sort((a, b) => {
-            const aEdges = edges.filter(edge => edge.source === a.id || edge.target === a.id);
-            const bEdges = edges.filter(edge => edge.source === b.id || edge.target === b.id);
-            return aEdges.length - bEdges.length;
-          });
-
-          const totalNodesInRank = nodesInRank.length;
-          nodesInRank.forEach((node, index) => {
-            nodePositions[node.id] = {
-              x: rank * rankSpacingX,
-              y: index * ySpacing - (totalNodesInRank * ySpacing) / 2,
-            };
-          });
-        });
-
-        const positionedNodes = nodes.map(node => ({
-          ...node,
-          x: nodePositions[node.id].x,
-          y: nodePositions[node.id].y,
-        }));
-
-        setNodes(positionedNodes);
-        setEdges(sortedEdges);
+        
+        setNodes(nodes);
+        setEdges(edges);
         setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching network data:', error);
         setLoading(false);
       });
-
-    return () => {
-      window.visualViewport.removeEventListener('resize', checkZoomLevel);
-    };
   }, [alertId]);
 
   const handleNodeClick = (event) => {
@@ -110,30 +61,51 @@ const NetworkPage = () => {
     setClickedNode(null);
   };
 
-  const toggleTransparentEdges = () => {
-    setShowTransparent(prevState => !prevState);
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
-  const goBack = () => {
-    navigate(-1);
+  const handleFileNameFilterChange = (event) => {
+    setFileNameFilter(event.target.value);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);  // Toggle menu visibility
+  };
+
+  const handleFilterToggle = () => {
+    setFilterTransparent(!filterTransparent);  // Toggle filter option
+  };
+
+  const getHighlightedItems = (items, searchQuery) => {
+    if (!searchQuery) return items;
+
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return items.map(item => ({
+      ...item,
+      highlighted: item.label.toLowerCase().includes(lowerCaseQuery),
+    }));
+  };
 
   const formatFilePath = (filePath) => {
     const parts = filePath.split('\\');
-    if (filePath.length > 12 && parts[0] !== 'comb-file') {
-      return `${parts[0]}\\...`;
-    }
-    return filePath;
+    return parts[parts.length - 1]; // Return only the file name
   };
 
-  const filteredNodes = showTransparent ? nodes : nodes.filter(node =>
-    edges.some(edge => (edge.source === node.id || edge.target === node.id) && !edge.transparent)
-  );
-  const filteredEdges = showTransparent ? edges : edges.filter(edge => !edge.transparent);
+  const highlightedNodes = getHighlightedItems(nodes, searchQuery);
+  const highlightedEdges = getHighlightedItems(edges, searchQuery);
+
+  const filterNodesByFileName = (nodes, fileNameFilter) => {
+    if (!fileNameFilter) return nodes;
+
+    const lowerCaseFilter = fileNameFilter.toLowerCase();
+    return nodes.map(node => ({
+      ...node,
+      highlight: node.label.toLowerCase().includes(lowerCaseFilter),
+    }));
+  };
+
+  const filteredNodes = filterNodesByFileName(highlightedNodes, fileNameFilter);
 
   const options = {
     layout: { hierarchical: false },
@@ -162,15 +134,17 @@ const NetworkPage = () => {
   const graphData = {
     nodes: filteredNodes.map(node => {
       let label = node.label;
+      let title = '';
 
       if (node.type === 'file' && node.label !== 'comb-file') {
-        label = formatFilePath(node.label);
+        label = formatFilePath(node.label); // Only show file name
+        title = node.label; // Full path for hover information
       }
 
       return {
         id: node.id,
         label: label,
-        title: node.type === 'file' ? node.label : '',
+        title: title,
         x: node.x,
         y: node.y,
         shape: node.type === 'process' ? 'circle' :
@@ -179,56 +153,49 @@ const NetworkPage = () => {
         size: node.type === 'socket' ? 40 : 20,
         font: { size: node.type === 'socket' ? 10 : 14, vadjust: node.type === 'socket' ? -50 : 0 },
         color: {
-          background: node.transparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)",
+          background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)"),
           border: "#2B7CE9",
-          highlight: { background: node.transparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF", border: "#2B7CE9" },
+          highlight: { background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF"), border: "#2B7CE9" },
         },
-        className: node.transparent && !showTransparent ? 'transparent' : '',
+        className: node.transparent && !node.highlight ? 'transparent' : '',
       };
     }),
 
-    edges: filteredEdges.map(edge => ({
+    edges: highlightedEdges.map(edge => ({
       from: edge.source,
       to: edge.target,
       label: edge.label,
-      color: edge.alname && edge.transparent ? '#ff9999' :
+      color: edge.highlighted ? '#FFFF00' :
+              edge.alname && edge.transparent && filterTransparent ? '#ff9999' :
               edge.alname ? '#ff0000' :
-              edge.transparent ? '#d3d3d3' :
+              edge.transparent && filterTransparent ? '#d3d3d3' :
               '#000000',
       id: `${edge.source}-${edge.target}`,
       font: { size: 12, align: 'horizontal', background: 'white', strokeWidth: 0 },
-      className: edge.transparent && !showTransparent ? 'transparent' : '',
+      className: edge.transparent && !edge.highlighted ? 'transparent' : '',
     })),
   };
 
   return (
     <div className="network-container">
-      {!isZoomedIn && (
-        <>
-          <button
-            className="floating-back-button bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-2 rounded"
-            onClick={goBack}
-          >
-            Back
-          </button>
-          <button
-            className="floating-toggle-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-            onClick={toggleTransparentEdges}
-          >
-            {showTransparent ? "Hide Transparent Edges" : "Show Transparent Edges"}
-          </button>
-        </>
-      )}
+      <div className="floating-buttons">
+        <button className="floating-back-button" onClick={() => navigate(-1)}>Back</button>
+        <button className="floating-toggle-button" onClick={toggleMenu}>
+          {menuVisible ? "Close Menu" : "Menu"}
+        </button>
+      </div>
+
       <div id="network-visualization">
         <Graph
           key={uuid()}
           graph={graphData}
           options={options}
-          events={{ 
+          events={{
             selectNode: handleNodeClick,
-            selectEdge: handleEdgeClick
+            selectEdge: handleEdgeClick,
           }}
         />
+        
         {clickedEdge && clickedEdge.alname && (
           <Rnd default={{ x: 50, y: 50, width: 250, height: 120 }} minWidth={250} minHeight={120}>
             <div className="edge-popup">
@@ -242,6 +209,7 @@ const NetworkPage = () => {
             </div>
           </Rnd>
         )}
+
         {clickedNode && (
           <Rnd default={{ x: 50, y: 50, width: 250, height: 120 }} minWidth={250} minHeight={120}>
             <div className="node-popup">
@@ -255,6 +223,32 @@ const NetworkPage = () => {
             </div>
           </Rnd>
         )}
+      </div>
+
+      <div className={`sliding-menu ${menuVisible ? 'visible' : ''}`}>
+        <div className="filter-container">
+          <div className="filter-option">
+            <label>
+              <input
+                type="checkbox"
+                checked={filterTransparent}
+                onChange={handleFilterToggle}
+              />
+              Show Transparent Edges
+            </label>
+          </div>
+          <div className="filter-option">
+            <label>
+              File Name Filter:
+              <input
+                type="text"
+                value={fileNameFilter}
+                onChange={handleFileNameFilterChange}
+                placeholder="Enter file name"
+              />
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );
