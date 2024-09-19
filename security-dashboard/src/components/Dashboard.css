@@ -8,7 +8,7 @@
 }
 
 .menu-open .main-content {
-  margin-left: 250px; 
+  margin-left: 250px; /* Adjusted for side menu width */
 }
 
 /* Top Bar */
@@ -56,6 +56,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 .side-menu.open {
@@ -85,16 +86,6 @@
   font-weight: bold;
 }
 
-.alerts-heading {
-  font-size: 1.75rem; 
-  font-weight: 700;  
-  color: #333;        
-  border-bottom: 2px solid #ff5100; 
-  padding-bottom: 0.5rem; 
-  margin-bottom: 1rem; 
-  text-transform: uppercase; 
-}
-
 /* Arrow for Collapsing Side Menu */
 .close-arrow-container {
   position: absolute;
@@ -119,6 +110,18 @@
   border-radius: 2px;
 }
 
+/* Alert Heading */
+.alerts-heading {
+  font-size: 1.75rem; 
+  font-weight: 700;  
+  color: #333;        
+  border-bottom: 2px solid #ff5100; 
+  padding-bottom: 0.5rem; 
+  margin-bottom: 1rem; 
+  text-transform: uppercase; 
+}
+
+/* Severity Filter */
 .severity-filter {
   margin-bottom: 1rem;
 }
@@ -155,9 +158,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translateY(0);
 }
-
-
-
 
 /* Dropdown Styles */
 .severity-dropdown {
@@ -212,6 +212,41 @@
 .clear-filters-btn:hover {
   background-color: #c82333;
 }
+
+/* Sorting arrow styles */
+/* Sorting arrow styles */
+.sortable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative; /* Ensure positioning for absolute children */
+}
+
+.sortable .arrow {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #333; /* Color of the arrow */
+  display: inline-block;
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Upward arrow for ascending */
+.sortable.asc .arrow::after {
+  content: '▲'; 
+  color: #007bff; /* Change color to make it visible */
+}
+
+/* Downward arrow for descending */
+.sortable.desc .arrow::after {
+  content: '▼'; 
+  color: #007bff; /* Change color to make it visible */
+}
+
+/* Additional styling for sorting indicators */
+.sortable:hover .arrow {
+  color: #0056b3; /* Darker color on hover for better visibility */
+}
+
 
 /* Main Content Area */
 .main-content {
@@ -292,8 +327,7 @@ tbody tr:hover {
   color: #155724;
 }
 
-
-
+/* Pie Chart Styling */
 .pie-chart {
   width: 300px;
   height: 300px;
@@ -338,7 +372,6 @@ tbody tr:hover {
   align-items: center;
   gap: 1rem;
 }
-
 
 /* Responsive Side Menu */
 @media (max-width: 768px) {
