@@ -1,0 +1,20 @@
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 1000;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.dropdown-menu label {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu label:hover {
+    background-color: #f1f1f1;
+}

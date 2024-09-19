@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import FilteredTable from './FilteredTable/FilteredTable';
 import TopBar from './TopBar/TopBar';
-
-ChartJS.register(Title, Tooltip, Legend, ArcElement);
+import Graph from './Graph/Graph';
+import Filter from './Filters/Filter';
 
 const Dashboard = ({ setAuth }) => {
   const [alerts, setAlerts] = useState([]);
@@ -20,9 +18,7 @@ const Dashboard = ({ setAuth }) => {
     fromDate: '',
     toDate: ''
   });
-  const [showPieChart, setShowPieChart] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
@@ -54,17 +50,6 @@ const Dashboard = ({ setAuth }) => {
     navigate('/login');
   };
 
-  const togglePieChart = () => {
-    setShowPieChart(prevState => !prevState);
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
-
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
 
   const sortData = (key) => {
     let direction = 'ascending';
@@ -149,140 +134,23 @@ const Dashboard = ({ setAuth }) => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    return date.toLocaleString();
-  };
-
-  const getSeverityCounts = () => {
-    const counts = { high: 0, medium: 0, low: 0 };
-    alerts.forEach(alert => {
-      const severity = alert.severity.toLowerCase();
-      if (counts[severity] !== undefined) {
-        counts[severity]++;
-      }
-    });
-    return counts;
-  };
-
-  const severityCounts = getSeverityCounts();
-  const pieData = {
-    labels: ['High', 'Medium', 'Low'],
-    datasets: [{
-      data: [severityCounts.high, severityCounts.medium, severityCounts.low],
-      backgroundColor: ['#dc3545', '#ffc107', '#28a745'],
-      borderColor: ['#fff', '#fff', '#fff'],
-      borderWidth: 1
-    }]
-  };
-
   return (
     <div className={`dashboard ${menuOpen ? 'menu-open' : ''}`}>
-      {/* <div className="top-bar">
-        <div className="left-section">
-          <div className="menu-toggle" onClick={toggleMenu}>
-            <div className="menu-icon">
-              <span className="menu-bar"></span>
-              <span className="menu-bar"></span>
-              <span className="menu-bar"></span>
-            </div>
-          </div>
-        </div>
-        <div className="right-section">
-          <button className="sign-out-btn" onClick={handleLogout}>
-            <i className="fas fa-sign-out-alt"></i> Sign Out
-          </button>
-        </div>
-      </div> */}
       <TopBar></TopBar>
-      <div className={`side-menu ${menuOpen ? 'open' : ''}`}>
-        <div className={`close-arrow-container ${menuOpen ? 'arrow-open' : ''}`} onClick={closeMenu}>
-          <div className="arrow"></div>
-        </div>
-        <div className="user-info">
-          <div className="user-photo"></div>
-          <div className="user-name">{username}</div>
-        </div>
-      </div>
-
-      <div className="main-content">
+      <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
         <h1 className="title">Dashboard</h1>
 
         {alerts.length > 0 ? (
           <div className="alerts-table">
             <h2 className="alerts-heading">Alerts</h2>
 
-            <div className="filter-container">
-              <input name="name" placeholder="Filter by Name" value={filters.name} onChange={handleFilterChange} />
-              <input name="machine" placeholder="Filter by Machine" value={filters.machine} onChange={handleFilterChange} />
+            <Filter filters={filters}
+              handleFilterChange={handleFilterChange}
+              handleSeverityChange={handleSeverityChange}
+              clearAllFilters={clearAllFilters}></Filter>
 
-              {/* Severity Dropdown */}
-              <div className="severity-dropdown">
-                <button className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                  {filters.severity.length > 0 ? filters.severity.join(', ') : 'Select Severity'}
-                </button>
-                {dropdownOpen && (
-                  <div className="dropdown-menu">
-                    <label>
-                      <input
-                        type="checkbox"
-                        value="high"
-                        checked={filters.severity.includes('high')}
-                        onChange={handleSeverityChange}
-                      />
-                      High
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value="medium"
-                        checked={filters.severity.includes('medium')}
-                        onChange={handleSeverityChange}
-                      />
-                      Medium
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        value="low"
-                        checked={filters.severity.includes('low')}
-                        onChange={handleSeverityChange}
-                      />
-                      Low
-                    </label>
-                  </div>
-                )}
-              </div>
+            <Graph alerts={alerts}></Graph>
 
-              {/* Date Filter */}
-              <div className="date-filter">
-                <input type="date" name="fromDate" value={filters.fromDate} onChange={handleFilterChange} placeholder="From" />
-                <input type="date" name="toDate" value={filters.toDate} onChange={handleFilterChange} placeholder="To" />
-              </div>
-
-              {/* Clear Filters Button */}
-              <button className="clear-filters-btn" onClick={clearAllFilters}>
-                Clear All Filters
-              </button>
-            </div>
-
-            <div className="card">
-              <div className="card-header">
-                {showPieChart && (
-                  <h2 className="card-title">Threat Severity</h2>
-                )}
-                <button className="toggle-chart-btn" onClick={togglePieChart}>
-                  {showPieChart ? 'Hide Graph' : 'Show Graph'}
-                </button>
-              </div>
-              {showPieChart && (
-                <div className="pie-chart-container">
-                  <div className="pie-chart">
-                    <Pie data={pieData} />
-                  </div>
-                </div>
-              )}
-            </div>
             <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
           </div>
         ) : (
