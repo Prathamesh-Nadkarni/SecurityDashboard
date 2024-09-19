@@ -16,7 +16,7 @@
     "react-scripts": "^5.0.1",
     "react-uuid": "latest",
     "react-vis-network-graph": "latest",
-    "react-chart-js-2": "latest",
+    "react-chartjs-2": "latest",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
