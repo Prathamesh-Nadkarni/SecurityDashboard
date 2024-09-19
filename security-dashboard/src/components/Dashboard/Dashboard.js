@@ -4,6 +4,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import './Dashboard.css';
 import FilteredTable from './FilteredTable/FilteredTable';
+import TopBar from './TopBar/TopBar';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
@@ -177,7 +178,7 @@ const Dashboard = ({ setAuth }) => {
 
   return (
     <div className={`dashboard ${menuOpen ? 'menu-open' : ''}`}>
-      <div className="top-bar">
+      {/* <div className="top-bar">
         <div className="left-section">
           <div className="menu-toggle" onClick={toggleMenu}>
             <div className="menu-icon">
@@ -192,8 +193,8 @@ const Dashboard = ({ setAuth }) => {
             <i className="fas fa-sign-out-alt"></i> Sign Out
           </button>
         </div>
-      </div>
-
+      </div> */}
+      <TopBar></TopBar>
       <div className={`side-menu ${menuOpen ? 'open' : ''}`}>
         <div className={`close-arrow-container ${menuOpen ? 'arrow-open' : ''}`} onClick={closeMenu}>
           <div className="arrow"></div>
@@ -266,47 +267,23 @@ const Dashboard = ({ setAuth }) => {
             </div>
 
             <div className="card">
-          <div className="card-header">
-            {showPieChart && (
-              <h2 className="card-title">Threat Severity</h2>
-            )}
-            <button className="toggle-chart-btn" onClick={togglePieChart}>
-              {showPieChart ? 'Hide Graph' : 'Show Graph'}
-            </button>
-          </div>
-          {showPieChart && (
-            <div className="pie-chart-container">
-              <div className="pie-chart">
-                <Pie data={pieData} />
+              <div className="card-header">
+                {showPieChart && (
+                  <h2 className="card-title">Threat Severity</h2>
+                )}
+                <button className="toggle-chart-btn" onClick={togglePieChart}>
+                  {showPieChart ? 'Hide Graph' : 'Show Graph'}
+                </button>
               </div>
+              {showPieChart && (
+                <div className="pie-chart-container">
+                  <div className="pie-chart">
+                    <Pie data={pieData} />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
             <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
-            {/* <table>
-              <thead>
-                <tr>
-                  <th onClick={() => sortData('id')}>Name</th>
-                  <th>Description</th>
-                  <th onClick={() => sortSeverity('severity')}>Severity</th>
-                  <th onClick={() => sortData('machine')}>Machine</th>
-                  <th onClick={() => sortData('occurred_on')}>Occurred On</th>
-                  <th>More Info</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAlerts.map((alert) => (
-                  <tr key={alert.id} className={`severity-${alert.severity.toLowerCase()}`}>
-                    <td>{alert.name}</td>
-                    <td>{alert.description}</td>
-                    <td>{alert.severity}</td>
-                    <td>{alert.machine}</td>
-                    <td>{formatDate(alert.occurred_on)}</td>
-                    <td><Link to={`/alert/${alert.id}`}>More Info</Link></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
           </div>
         ) : (
           <div className="no-alerts">
