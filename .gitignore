@@ -1,3 +1,4 @@
 /security-dashboard/node_modules
 /security-dashboard/env
 /security-dashboard/package-lock.json
+users.db
