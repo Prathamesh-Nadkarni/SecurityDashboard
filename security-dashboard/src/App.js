@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import UploadPage from './components/UploadPage';
+import Dashboard from './components/Dashboard/Dashboard';
+import UploadPage from './components/UploadPage/UploadPage';
 import ProcessingPage from './components/ProcessingPage';
 import AlertPage from './components/AlertPage';
-import NetworkPage from './components/NetworkPage';
-import LoginPage from './components/LoginPage';
-import CreateUserPage from './components/CreateUserPage';
-import Profile from './components/Profile'
+import NetworkPage from './components/NetworkPage/NetworkPage';
+import LoginPage from './components/LoginPage/LoginPage';
+import CreateUserPage from './components/CreateUserPage/CreateUserPage';
+import Profile from './components/Profile/Profile'
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
