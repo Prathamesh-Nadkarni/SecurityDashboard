@@ -17,6 +17,10 @@
     "react-uuid": "latest",
     "react-vis-network-graph": "latest",
     "react-chartjs-2": "latest",
+    "@mui/material": "6.1.0",
+    "@mui/x-data-grid": "7.17.0",
+    "@emotion/react": "11.13.3",
+    "@emotion/styled": "11.13.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

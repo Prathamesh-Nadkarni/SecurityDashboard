@@ -19,7 +19,10 @@ const Dashboard = ({ setAuth }) => {
     toDate: ''
   });
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [showPieChart, setShowPieChart] = useState(true);
+  const togglePieChart = () => {
+    setShowPieChart(prevState => !prevState);
+  };
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
 
@@ -147,11 +150,15 @@ const Dashboard = ({ setAuth }) => {
             <Filter filters={filters}
               handleFilterChange={handleFilterChange}
               handleSeverityChange={handleSeverityChange}
-              clearAllFilters={clearAllFilters}></Filter>
+              clearAllFilters={clearAllFilters}
+              togglePieChart={togglePieChart}
+              showPieChart={showPieChart}
+            ></Filter>
 
-            <Graph alerts={alerts}></Graph>
+            {showPieChart && <Graph alerts={alerts}></Graph>}
 
             <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
+
           </div>
         ) : (
           <div className="no-alerts">

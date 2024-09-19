@@ -8,8 +8,12 @@
     background-color: #007bff;
     color: white;
     border: none;
+    min-width: 100px;
     padding: 10px;
     border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
@@ -68,4 +72,21 @@
     background-color: #bd2130;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transform: translateY(0);
+}
+
+.toggle-chart-btn {
+    background-color: #007bff;
+    color: white;
+    font-size: 0.75rem;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-chart-btn:hover {
+    background-color: #0056b3;
 }

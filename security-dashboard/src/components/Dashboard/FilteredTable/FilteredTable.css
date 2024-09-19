@@ -2,17 +2,17 @@
 
 /* Alert Severity */
 .severity-high {
-    background-color: #f96d78;
+    background-color: #ff7c87;
     color: #721c24;
 }
 
 .severity-medium {
-    background-color: #f6d464;
+    background-color: #ffeaa5;
     color: #856404;
 }
 
 .severity-low {
-    background-color: #52f878;
+    background-color: #95fcad;
     color: #155724;
 }
 

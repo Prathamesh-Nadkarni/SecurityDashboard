@@ -2,7 +2,7 @@ import { useState } from "react";
 import SeverityOptions from "./SeverityOptions/SeverityOptions";
 import "./Filter.css"
 
-export default function Filter({ filters, handleFilterChange, handleSeverityChange, clearAllFilters }) {
+export default function Filter({ filters, handleFilterChange, handleSeverityChange, clearAllFilters, togglePieChart, showPieChart }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return <>
@@ -30,7 +30,9 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
             <button className="clear-filters-btn" onClick={clearAllFilters}>
                 Clear All Filters
             </button>
-            {/* <input name="rowsPerPage" placeholder="Number of rows per page(default 10)" type="number" onChange={handleFilterChange} /> */}
+            <button className="toggle-chart-btn" onClick={togglePieChart}>
+                {showPieChart ? 'Hide Graph' : 'Show Graph'}
+            </button>
         </div>
     </>
 }

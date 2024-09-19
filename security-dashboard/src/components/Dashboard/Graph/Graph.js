@@ -5,9 +5,8 @@ import "./Graph.css"
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
-export default function Graph({alerts}) {
-    
-    const [showPieChart, setShowPieChart] = useState(true);
+export default function Graph({ alerts }) {
+
     const getSeverityCounts = () => {
         const counts = { high: 0, medium: 0, low: 0 };
         alerts.forEach(alert => {
@@ -29,27 +28,17 @@ export default function Graph({alerts}) {
             borderWidth: 1
         }]
     };
-    const togglePieChart = () => {
-        setShowPieChart(prevState => !prevState);
-    };
 
     return <>
         <div className="card">
             <div className="card-header">
-                {showPieChart && (
-                    <h2 className="card-title">Threat Severity</h2>
-                )}
-                <button className="toggle-chart-btn" onClick={togglePieChart}>
-                    {showPieChart ? 'Hide Graph' : 'Show Graph'}
-                </button>
+                <h2 className="card-title">Threat Severity</h2>
             </div>
-            {showPieChart && (
-                <div className="pie-chart-container">
-                    <div className="pie-chart">
-                        <Pie data={pieData} />
-                    </div>
+            <div className="pie-chart-container">
+                <div className="pie-chart">
+                    <Pie data={pieData} />
                 </div>
-            )}
+            </div>
         </div>
     </>
 }
