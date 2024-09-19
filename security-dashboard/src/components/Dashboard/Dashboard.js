@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import './Dashboard.css';
+import FilteredTable from './FilteredTable/FilteredTable';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
@@ -281,8 +282,8 @@ const Dashboard = ({ setAuth }) => {
             </div>
           )}
         </div>
-
-            <table>
+            <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
+            {/* <table>
               <thead>
                 <tr>
                   <th onClick={() => sortData('id')}>Name</th>
@@ -305,7 +306,7 @@ const Dashboard = ({ setAuth }) => {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table> */}
           </div>
         ) : (
           <div className="no-alerts">

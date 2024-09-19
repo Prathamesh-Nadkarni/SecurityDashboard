@@ -1,0 +1,82 @@
+
+
+/* Alert Severity */
+.severity-high {
+    background-color: #f96d78;
+    color: #721c24;
+}
+
+.severity-medium {
+    background-color: #f6d464;
+    color: #856404;
+}
+
+.severity-low {
+    background-color: #52f878;
+    color: #155724;
+}
+
+.sortable {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: relative;
+    /* Ensure positioning for absolute children */
+}
+
+.sortable .arrow {
+    margin-left: 5px;
+    font-size: 12px;
+    color: #333;
+    /* Color of the arrow */
+    display: inline-block;
+    transition: color 0.3s ease;
+    /* Smooth transition for hover effect */
+}
+
+/* Upward arrow for ascending */
+.sortable.asc .arrow::after {
+    content: '▲';
+    color: #007bff;
+    /* Change color to make it visible */
+}
+
+/* Downward arrow for descending */
+.sortable.desc .arrow::after {
+    content: '▼';
+    color: #007bff;
+    /* Change color to make it visible */
+}
+
+/* Additional styling for sorting indicators */
+.sortable:hover .arrow {
+    color: #0056b3;
+    /* Darker color on hover for better visibility */
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: #f8f8f8;
+}
+
+th,
+td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    font-weight: bold;
+    background-color: #f4f4f4;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
