@@ -23,10 +23,12 @@ function ResponsiveDrawer(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
+    const [drawerW, setDrawerW] = React.useState(0);
 
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
+        setDrawerW(0);
     };
 
     const handleDrawerTransitionEnd = () => {
@@ -35,7 +37,8 @@ function ResponsiveDrawer(props) {
 
     const handleDrawerToggle = () => {
         if (!isClosing) {
-            setMobileOpen(!mobileOpen);
+            setDrawerW(() => drawerWidth)
+            setMobileOpen(prev => !prev);
         }
     };
 
@@ -80,33 +83,32 @@ function ResponsiveDrawer(props) {
             <AppBar
                 position="fixed"
                 sx={{
-                    width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
+                    width: { sm: `calc(100% - ${drawerW}px)` },
+                    ml: { sm: `${drawerW}px` },
                 }}
             >
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Responsive drawer
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
                     </Typography>
                 </Toolbar>
             </AppBar>
             <Box
                 component="nav"
-                sx={{ width: { sm: drawerWidth }}}
+                sx={{ width: { sm: drawerW } }}
                 aria-label="mailbox folders"
             >
                 <Drawer
                     container={container}
-                    variant="permanent"
+                    variant="temporary"
                     open={mobileOpen}
                     onTransitionEnd={handleDrawerTransitionEnd}
                     onClose={handleDrawerClose}
@@ -115,7 +117,7 @@ function ResponsiveDrawer(props) {
                     }}
                     sx={{
                         display: { xs: 'none', sm: 'block' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerW },
                     }}
                 >
                     {drawer}
@@ -123,7 +125,10 @@ function ResponsiveDrawer(props) {
             </Box>
             <Box
                 component="main"
-                sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+                sx={{ flexGrow: 1
+                    , p: 3
+                    , width: { sm: `calc(100% - ${drawerW}px)` }
+                    }}
             >{props.children}</Box>
         </Box>
     );
