@@ -5,11 +5,15 @@ import FilteredTable from './FilteredTable/FilteredTable';
 import TopBar from './TopBar/TopBar';
 import Graph from './Graph/Graph';
 import Filter from './Filters/Filter';
+import io from 'socket.io-client';
+
 
 const Dashboard = ({ setAuth }) => {
   const [alerts, setAlerts] = useState([]);
   const [filteredAlerts, setFilteredAlerts] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
+  const [newAlerts, setNewAlerts] = useState([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [filters, setFilters] = useState({
     id: '',
     name: '',
@@ -20,11 +24,33 @@ const Dashboard = ({ setAuth }) => {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPieChart, setShowPieChart] = useState(true);
+  const socket = io('http://127.0.0.1:5000');
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);
   };
+
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const socket = io('http://localhost:5000');
+
+    // Log the socket connection status
+    socket.on('connect', () => {
+        console.log('Socket connected:', socket.id);
+    });
+
+    socket.on('new_alert', (alert) => {
+        console.log('New alert:', alert);
+        setAlerts((prevAlerts) => [...prevAlerts, alert]);
+        fetchAlerts();
+    });
+
+    return () => {
+        socket.disconnect();
+        console.log('Socket disconnected');
+    };
+  }, []);
 
   useEffect(() => {
     fetchAlerts();
@@ -47,10 +73,17 @@ const Dashboard = ({ setAuth }) => {
     }
   };
 
-  const handleLogout = () => {
-    setAuth(false);
-    localStorage.setItem('auth', 'false');
-    navigate('/login');
+  const toggleNotifications = () => {
+    setNotificationsOpen(!notificationsOpen);
+  };
+
+  const clearAlert = (index) => {
+    const updatedAlerts = newAlerts.filter((_, i) => i !== index);
+    setNewAlerts(updatedAlerts);
+  };
+
+  const clearAllAlerts = () => {
+    setNewAlerts([]);
   };
 
 
@@ -139,13 +172,55 @@ const Dashboard = ({ setAuth }) => {
 
   return (
     <div className={`dashboard ${menuOpen ? 'menu-open' : ''}`}>
-      <TopBar></TopBar>
-      <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
-        <h1 className="title">Dashboard</h1>
+      <TopBar setAuth={true}></TopBar>
 
+      
+
+
+
+
+      <div className="container-fluid main-content scroll" style={{ position: "relative" }}>
+        <h2 className="title">Dashboard</h2>
         {alerts.length > 0 ? (
-          <div className="alerts-table">
+          <div className="alerts-table" style={{ flex: showPieChart ? '0 1 auto' : '1 1 100%', transition: 'flex 0.3s ease' }}>
             <h2 className="alerts-heading">Alerts</h2>
+
+
+
+
+            <div className="notification-container" style={{ position: 'relative' }}>
+      <div 
+        className={`notification-icon ${newAlerts.length > 0 ? 'active' : ''}`} 
+        onClick={() => setNotificationsOpen(!notificationsOpen)}
+      >
+        {/* SVG Code Here */}
+        {newAlerts.length > 0 && (
+          <span className="notification-count">{newAlerts.length}</span>
+        )}
+      </div>
+
+      {notificationsOpen && (
+        <div className="notification-dropdown">
+          <h2><b>New Alerts</b></h2>
+          {newAlerts.length === 0 ? (
+            <p>No new alerts</p>
+          ) : (
+            <ul>
+              {newAlerts.map((alert, index) => (
+                <li key={index}>
+                  <p>{alert.name} - {alert.severity}</p>
+                  <button className="clear-alert-button" onClick={() => clearAlert(index)}>Clear</button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {newAlerts.length > 0 && (
+            <button className="clear-all-button" onClick={clearAllAlerts}>Clear All</button>
+          )}
+        </div>
+      )}
+    </div>
+
 
             <Filter filters={filters}
               handleFilterChange={handleFilterChange}

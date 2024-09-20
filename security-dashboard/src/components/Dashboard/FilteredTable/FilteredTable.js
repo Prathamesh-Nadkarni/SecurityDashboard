@@ -30,7 +30,7 @@ const columns = [
         headerName: 'Description',
         editable: false,
         sortable: true,
-        flex: 1,
+        flex: 0.8,
         headerAlign: 'left'
     },
     {
@@ -70,6 +70,7 @@ const columns = [
         description: 'This column has a value getter and is not sortable.',
         sortable: false,
         editable: false,
+        flex: 0.2,
         renderCell: (params) => {
             return <>
                 <Link to={`/alert/${params.row.id}`}>
@@ -90,7 +91,7 @@ const pageSizeOptions = [
 export default function FilteredTable({ filteredAlerts }) {
 
     return (
-        <Box sx={{ height: 500, width: '100%', maxWidth: "100%" }}>
+        <Box sx={{ height: 700, width: '100%', maxWidth: "100%" }}>
             <DataGrid
                 rows={filteredAlerts}
                 columns={columns}
@@ -100,9 +101,13 @@ export default function FilteredTable({ filteredAlerts }) {
                             pageSize: 10,
                         },
                     },
+                    sorting: {
+                        sortModel: [{ field: 'occurred_on', sort: 'desc' }],
+                      },
                 }}
                 pageSizeOptions={pageSizeOptions}
                 autosizeOptions={autoSizeOptions}
+                rowHeight={59}
                 getRowClassName={(params) => `severity-${params.row.severity?.toLowerCase()}`}
             />
         </Box>

@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 import sqlite3
 import sqlalchemy.exc
+from flask_socketio import SocketIO, emit
 import os
 
 app = Flask(__name__)
@@ -18,7 +19,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'images')
 
 db = SQLAlchemy(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 uploadCount = 0
 oldFile = None
 
@@ -233,6 +234,7 @@ def get_alert(alert_id):
 def add_alert():
     try:
         data = request.json
+        id = data.get('id')
         name = data.get('name')
         description = data.get('description')
         machine = data.get('machine')
@@ -246,6 +248,7 @@ def add_alert():
         occurred_on = datetime.strptime(occurred_on, '%Y-%m-%d %H:%M:%S')
         
         new_alert = Alert(
+            id=id,
             name=name,
             description=description,
             machine=machine,
@@ -255,7 +258,7 @@ def add_alert():
         )
         db.session.add(new_alert)
         db.session.commit()
-        
+        socketio.emit('new_alert', {'id': id,'name': name, 'description': description, 'severity': severity, 'machine': machine, 'occurred_on': occurred_on.strftime('%Y-%m-%d %H:%M:%S')})
         return jsonify({'message': 'Alert added successfully'}), 201
     except SQLAlchemyError as e:
         db.session.rollback()
