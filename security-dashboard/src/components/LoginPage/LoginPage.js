@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
-
+import { encrypt } from '../../utils/crypt';
 const authenticateYubikey = async (username) => {
   const publicKeyOptions = {
     challenge: new Uint8Array(32), // Replace with real challenge from backend
@@ -52,6 +52,7 @@ const LoginPage = ({ setAuth }) => {
           }),
         });
       } else {
+        password = encrypt(password);
         response = await fetch('http://127.0.0.1:5000/api/login', {
           method: 'POST',
           headers: {

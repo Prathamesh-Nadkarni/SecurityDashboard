@@ -5,6 +5,7 @@ import TopBar from './TopBar/TopBar';
 import Graph from './Graph/Graph';
 import Filter from './Filters/Filter';
 import io from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
 
 
 const Dashboard = ({ setAuth }) => {
@@ -22,6 +23,7 @@ const Dashboard = ({ setAuth }) => {
     fromDate: '',
     toDate: ''
   });
+  const navigate = useNavigate();
   const [showPieChart, setShowPieChart] = useState(true);
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);

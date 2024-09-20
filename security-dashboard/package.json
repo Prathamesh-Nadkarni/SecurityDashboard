@@ -26,6 +26,7 @@
     "@mui/icons-material" : "latest",
     "react-bootstrap": "latest",
     "bootstrap": "latest",
+    "crypto-js" : "latest",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
