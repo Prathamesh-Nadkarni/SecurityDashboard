@@ -171,16 +171,39 @@ const Dashboard = ({ setAuth }) => {
   };
 
   return (
-    <div className={`dashboard ${menuOpen ? 'menu-open' : ''}`}>
-      <TopBar setAuth={true}></TopBar>
+    <>
+      {/* <TopBar></TopBar> */}
+      <TopBar>
+        <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
+          <h1 className="title">Dashboard</h1>
 
-      
+          {alerts.length > 0 ? (
+            <div className="alerts-table">
+              <h2 className="alerts-heading">Alerts</h2>
 
+              <Filter filters={filters}
+                handleFilterChange={handleFilterChange}
+                handleSeverityChange={handleSeverityChange}
+                clearAllFilters={clearAllFilters}
+                togglePieChart={togglePieChart}
+                showPieChart={showPieChart}
+              ></Filter>
 
+              {showPieChart && <Graph alerts={alerts}></Graph>}
 
+              <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
 
-      <div className="container-fluid main-content scroll" style={{ position: "relative" }}>
-        <h2 className="title">Dashboard</h2>
+            </div>
+          ) : (
+            <div className="no-alerts">
+              <p>No alerts found.</p>
+            </div>
+          )}
+        </div>
+      </TopBar>
+       <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
+        <h1 className="title">Dashboard</h1>
+
         {alerts.length > 0 ? (
           <div className="alerts-table" style={{ flex: showPieChart ? '0 1 auto' : '1 1 100%', transition: 'flex 0.3s ease' }}>
             <h2 className="alerts-heading">Alerts</h2>
@@ -241,7 +264,7 @@ const Dashboard = ({ setAuth }) => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

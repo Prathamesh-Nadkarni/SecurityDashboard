@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UploadPage.css';
+import TopBar from '../Dashboard/TopBar/TopBar';
 
 const UploadPage = () => {
   const [file, setFile] = useState(null);
@@ -43,17 +44,19 @@ const UploadPage = () => {
   };
 
   return (
-    <div className="upload-page">
-      <button onClick={() => navigate('/')} className="home-button-up">
-        <div className="home-icon-circle-up">
-          <i className="fa fa-home home-icon-up"></i>
-        </div>
-      </button>
-      <h1 className="title">Upload CSV</h1>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <input type="file" onChange={handleFileChange} className="file-input" />
-      <button onClick={handleUpload} className="upload-button">Upload</button>
-    </div>
+    <TopBar>
+      <div className="upload-page">
+        <button onClick={() => navigate('/')} className="home-button-up">
+          <div className="home-icon-circle-up">
+            <i className="fa fa-home home-icon-up"></i>
+          </div>
+        </button>
+        <h1 className="title">Upload CSV</h1>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        <input type="file" onChange={handleFileChange} className="file-input" />
+        <button onClick={handleUpload} className="upload-button">Upload</button>
+      </div>
+    </TopBar>
   );
 };
 

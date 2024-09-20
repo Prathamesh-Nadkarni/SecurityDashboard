@@ -1,41 +1,145 @@
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MailIcon from '@mui/icons-material/Mail';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
-export default function TopBar({ }) {
-    const username = localStorage.getItem('username');
+const drawerWidth = 240;
 
-    return <>
-        <nav className="bg-white dark:bg-fuchsia-300 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-fuschia-600">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-                <a href="https://sts.cs.illinois.edu/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png" className="h-8" alt="Flowbite Logo" />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">STS Lab</span>
-                </a>
-                <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <button type="button" className="text-white bg-fuchsia-700 hover:bg-fuchsia-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-fuchsia-500 dark:hover:bg-fuchsia-700 dark:focus:ring-blue-800">Sign Out</button>
-                    <button data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
-                        <span className="sr-only">Open main menu</span>
-                        <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                        </svg>
-                    </button>
-                </div>
-                <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                    <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-fuchsia-300  dark:border-fuchsia-600">
-                        <li>
-                            <a href="#" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-fuchsia-700 md:p-0 md:dark:text-fuchsia-900" aria-current="page"><b>Dashboard</b></a>
-                        </li>
-                        <li>
-                            <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-fuchsia-700 md:p-0 md:dark:hover:text-fuchsia-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><b>Profile</b></a>
-                        </li>
-                        <li>
-                            <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-fuchsia-700 md:p-0 md:dark:hover:text-fuchsia-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><b>About</b></a>
-                        </li>
-                        <li>
-                            <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-fuchsia-700 md:p-0 md:dark:hover:text-fuchsia-900 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><b>Contact</b></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+function TopBar(props) {
+    const { window } = props;
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [isClosing, setIsClosing] = React.useState(false);
+    const [drawerW, setDrawerW] = React.useState(0);
 
-    </>
+    const handleDrawerClose = () => {
+        setIsClosing(true);
+        setMobileOpen(false);
+        setDrawerW(0);
+    };
+
+    const handleDrawerTransitionEnd = () => {
+        setIsClosing(false);
+    };
+
+    const handleDrawerToggle = () => {
+        if (!isClosing) {
+            setDrawerW(() => drawerWidth)
+            setMobileOpen(prev => !prev);
+        }
+    };
+
+    const drawer = (
+        <div>
+            <Toolbar />
+            <Divider />
+            <List>
+                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </div>
+    );
+
+    // Remove this const when copying and pasting into your project.
+    const container = window !== undefined ? () => window().document.body : undefined;
+
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <AppBar
+                position="fixed"
+                sx={{
+                    width: { sm: `calc(100% - ${drawerW}px)` },
+                    ml: { sm: `${drawerW}px` },
+                }}
+            >
+                <Toolbar>
+                    <Typography variant="h6" noWrap component="div">
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Box
+                component="nav"
+                sx={{ width: { sm: drawerW } }}
+                aria-label="mailbox folders"
+            >
+                <Drawer
+                    container={container}
+                    variant="temporary"
+                    open={mobileOpen}
+                    onTransitionEnd={handleDrawerTransitionEnd}
+                    onClose={handleDrawerClose}
+                    ModalProps={{
+                        keepMounted: true, // Better open performance on mobile.
+                    }}
+                    sx={{
+                        display: { xs: 'none', sm: 'block' },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerW },
+                    }}
+                >
+                    {drawer}
+                </Drawer>
+            </Box>
+            <Box
+                component="main"
+                sx={{ flexGrow: 1
+                    , p: 3
+                    , width: { sm: `calc(100% - ${drawerW}px)` }
+                    }}
+            >{props.children}</Box>
+        </Box>
+    );
 }
+
+TopBar.propTypes = {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * Remove this when copying and pasting into your project.
+     */
+    window: PropTypes.func,
+};
+
+export default TopBar;

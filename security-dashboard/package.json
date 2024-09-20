@@ -17,11 +17,13 @@
     "react-uuid": "latest",
     "react-vis-network-graph": "latest",
     "react-chartjs-2": "latest",
-    "@mui/material": "6.1.0",
+    "@mui/material": "latest",
+    "prop-types": "15.8.1",
     "@mui/x-data-grid": "7.17.0",
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
     "socket.io-client": "latest",
+    "@mui/icons-material" : "latest",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
