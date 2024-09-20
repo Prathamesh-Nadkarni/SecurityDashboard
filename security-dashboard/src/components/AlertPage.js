@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import TopBar from './Dashboard/TopBar/TopBar';
 
 const AlertPage = () => {
   const { alertId } = useParams();
@@ -21,60 +22,60 @@ const AlertPage = () => {
   if (!alertData) return <div>Loading...</div>;
 
   return (
-    <div className="p-10">
-      {/* Back to Dashboard Button */}
-      <button
-        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={() => navigate('/login')}
-      >
-        Back to Dashboard
-      </button>
-
-      <h1 className="text-2xl mb-4">Alert {alertId}</h1>
-      <table className="table-auto w-full">
-        <tbody>
-          <tr>
-            <td className="border px-4 py-2 font-bold">ID</td>
-            <td className="border px-4 py-2">{alertData.id}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Name</td>
-            <td className="border px-4 py-2">{alertData.name}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Description</td>
-            <td className="border px-4 py-2">{alertData.description}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Machine</td>
-            <td className="border px-4 py-2">{alertData.machine}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Occurred On</td>
-            <td className="border px-4 py-2">{alertData.occurred_on}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Severity</td>
-            <td className="border px-4 py-2">{alertData.severity}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">Program</td>
-            <td className="border px-4 py-2">{alertData.program}</td>
-          </tr>
-          <tr>
-            <td className="border px-4 py-2 font-bold">View Graph</td>
-            <td className="border px-4 py-2">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => navigate(`/network/${alertId}`)}
-              >
-                View Graph
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <TopBar>
+      <div className="p-10">
+        <button
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
+          onClick={() => navigate('/login')}
+        >
+          Back to Dashboard
+        </button>
+        <h1 className="text-2xl mb-4">Alert {alertId}</h1>
+        <table className="table-auto w-full">
+          <tbody>
+            <tr>
+              <td className="border px-4 py-2 font-bold">ID</td>
+              <td className="border px-4 py-2">{alertData.id}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Name</td>
+              <td className="border px-4 py-2">{alertData.name}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Description</td>
+              <td className="border px-4 py-2">{alertData.description}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Machine</td>
+              <td className="border px-4 py-2">{alertData.machine}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Occurred On</td>
+              <td className="border px-4 py-2">{alertData.occurred_on}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Severity</td>
+              <td className="border px-4 py-2">{alertData.severity}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">Program</td>
+              <td className="border px-4 py-2">{alertData.program}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-bold">View Graph</td>
+              <td className="border px-4 py-2">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => navigate(`/network/${alertId}`)}
+                >
+                  View Graph
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TopBar>
   );
 };
 

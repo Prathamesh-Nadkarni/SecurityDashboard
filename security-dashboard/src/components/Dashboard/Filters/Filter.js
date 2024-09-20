@@ -27,6 +27,8 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
             </div>
 
             {/* Clear Filters Button */}
+        </div>
+        <div className="filter-container">
             <button className="clear-filters-btn" onClick={clearAllFilters}>
                 Clear All Filters
             </button>

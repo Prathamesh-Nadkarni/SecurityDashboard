@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
+import TopBar from '../Dashboard/TopBar/TopBar';
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({ name: '', email: '', username: '', picture: '' });
@@ -67,7 +68,7 @@ const Profile = () => {
   };
 
   const handleHomeClick = () => {
-    navigate('/'); 
+    navigate('/');
   };
 
   const handleResetPassword = () => {
@@ -75,42 +76,44 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-page">
-      <button className="home-button" onClick={handleHomeClick}>Home</button>
-      <h1>Profile</h1>
-      <div className="profile-picture">
-        <img src={'https://www.w3schools.com/html/pic_trulli.jpg'} alt="Profile" />
-        {editMode && <input type="file" onChange={handlePictureChange} />}
-      </div>
-      <div className="profile-info">
-        <label>Name:</label>
-        {editMode ? (
-          <input type="text" name="name" value={userInfo.name} onChange={handleChange} />
-        ) : (
-          <p>{userInfo.name}</p>
-        )}
-        <label>Email:</label>
-        {editMode ? (
-          <input type="email" name="email" value={userInfo.email} onChange={handleChange} />
-        ) : (
-          <p>{userInfo.email}</p>
-        )}
-        <label>Username:</label>
-        {editMode ? (
-          <input type="text" name="username" value={userInfo.username} onChange={handleChange} />
-        ) : (
-          <p>{userInfo.username}</p>
-        )}
-        <div className="reset-password-section">
-          <button className="reset-password-button" onClick={handleResetPassword}>Reset Password</button>
+    <TopBar>
+      <div className="profile-page">
+        <button className="home-button" onClick={handleHomeClick}>Home</button>
+        <h1>Profile</h1>
+        <div className="profile-picture">
+          <img src={'https://www.w3schools.com/html/pic_trulli.jpg'} alt="Profile" />
+          {editMode && <input type="file" onChange={handlePictureChange} />}
         </div>
-        {editMode ? (
-          <button className={isChanged ? 'save-button active' : 'save-button'} onClick={handleSave}>Save</button>
-        ) : (
-          <button onClick={() => setEditMode(true)}>Edit</button>
-        )}
+        <div className="profile-info">
+          <label>Name:</label>
+          {editMode ? (
+            <input type="text" name="name" value={userInfo.name} onChange={handleChange} />
+          ) : (
+            <p>{userInfo.name}</p>
+          )}
+          <label>Email:</label>
+          {editMode ? (
+            <input type="email" name="email" value={userInfo.email} onChange={handleChange} />
+          ) : (
+            <p>{userInfo.email}</p>
+          )}
+          <label>Username:</label>
+          {editMode ? (
+            <input type="text" name="username" value={userInfo.username} onChange={handleChange} />
+          ) : (
+            <p>{userInfo.username}</p>
+          )}
+          <div className="reset-password-section">
+            <button className="reset-password-button" onClick={handleResetPassword}>Reset Password</button>
+          </div>
+          {editMode ? (
+            <button className={isChanged ? 'save-button active' : 'save-button'} onClick={handleSave}>Save</button>
+          ) : (
+            <button onClick={() => setEditMode(true)}>Edit</button>
+          )}
+        </div>
       </div>
-    </div>
+    </TopBar>
   );
 };
 
