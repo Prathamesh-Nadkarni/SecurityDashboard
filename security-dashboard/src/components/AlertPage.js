@@ -19,6 +19,23 @@ const AlertPage = () => {
       .catch(error => console.error('There was a problem with the fetch operation:', error));
   }, [alertId]);
 
+  const handleResolveAlert = () => {
+    const confirmed = window.confirm('Are you sure you want to mark this alert as resolved and delete it?');
+    if (confirmed) {
+      fetch(`http://127.0.0.1:5000/alert/${alertId}`, {
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to delete the alert');
+          }
+          alert('Alert has been resolved and deleted.');
+          navigate('/login'); // Redirect to the dashboard after deletion
+        })
+        .catch(error => console.error('There was a problem with the delete operation:', error));
+    }
+  };
+
   if (!alertData) return <div>Loading...</div>;
 
   return (
@@ -74,6 +91,14 @@ const AlertPage = () => {
             </tr>
           </tbody>
         </table>
+
+        {/* Red Resolved Button */}
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+          onClick={handleResolveAlert}
+        >
+          Resolved
+        </button>
       </div>
     </TopBar>
   );

@@ -232,10 +232,27 @@ def get_network_data(alert_id):
     global dummy_network_data
     return dummy_network_data[str(alert_id)]
 
+def delete_alert(alert_id):
+    global dummy_network_data
+    if str(alert_id) in dummy_network_data:
+        del dummy_network_data[str(alert_id)]
+        return {"message": f"Alert {alert_id} has been successfully deleted."}
+    else:
+        return {"error": f"Alert {alert_id} does not exist."}
+
+
 @app.route('/api/network/<int:alert_id>', methods=['GET'])
 def network(alert_id):
     try:
         data = get_network_data(alert_id)
+        return jsonify(data), 200
+    except SQLAlchemyError as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/api/network/<int:alert_id>', methods=['DELETE'])
+def delete_network(alert_id):
+    try:
+        data = delete_alert(alert_id)
         return jsonify(data), 200
     except SQLAlchemyError as e:
         return jsonify({'error': str(e)}), 400

@@ -4,12 +4,12 @@ import './Profile.css';
 import TopBar from '../Dashboard/TopBar/TopBar';
 
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState({ name: '', email: '', username: '', picture: '' });
+  const [userInfo, setUserInfo] = useState({ name: 'Unknown', email: 'Unknown', username: 'Unknown', picture: '' });
   const [editMode, setEditMode] = useState(false);
   const [newPicture, setNewPicture] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     fetchUserInfo();
   }, []);
@@ -22,7 +22,11 @@ const Profile = () => {
         throw new Error('Failed to fetch user info');
       }
       const data = await response.json();
-      setUserInfo(data.user);
+      if (data.user) {
+        setUserInfo(data.user);
+      } else {
+        console.error('User data is not available');
+      }
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
@@ -40,9 +44,10 @@ const Profile = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
-    formData.append('name', userInfo.name);
-    formData.append('email', userInfo.email);
-    formData.append('username', userInfo.username);
+    formData.append('name', userInfo.name || 'Unknown');
+    formData.append('email', userInfo.email || 'Unknown');
+    formData.append('username', userInfo.username || 'Unknown');
+    
     if (newPicture) {
       formData.append('picture', newPicture);
     }
@@ -72,7 +77,7 @@ const Profile = () => {
   };
 
   const handleResetPassword = () => {
-    navigate('/reset-password'); // Navigate to a reset password page (you'll need to create this page if not done yet)
+    navigate('/reset-password');
   };
 
   return (

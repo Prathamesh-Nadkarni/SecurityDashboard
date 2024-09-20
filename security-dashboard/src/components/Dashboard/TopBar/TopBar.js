@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 const drawerWidth = 240;
 
 function TopBar(props) {
-    const { alerts, setAlerts, window } = props;
+    const { alerts = [], setAlerts, window } = props; // Set default value for alerts
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [drawerW, setDrawerW] = useState(0);
@@ -34,6 +34,9 @@ function TopBar(props) {
     const [notificationList, setNotificationList] = useState(alerts);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        setNotificationList(alerts); // This will update the notification list whenever alerts changes
+    }, [alerts]);
 
     const clearAlert = (index) => {
         setNotificationList((prevNotifications) => prevNotifications.filter((_, i) => i !== index));
@@ -79,7 +82,7 @@ function TopBar(props) {
                             }
                         }}>
                             <ListItemIcon>
-                                {text === 'Profile' ? <AccountCircleIcon /> : <SpaceDashboardIcon />} {/* Change icon as needed */}
+                                {text === 'Profile' ? <AccountCircleIcon /> : <SpaceDashboardIcon />}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -90,7 +93,7 @@ function TopBar(props) {
             <List>
                 {['Settings', 'Contact'].map((text, index) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton component="a" href="https://sts.cs.illinois.edu/" target="_blank" rel="noopener noreferrer">
                             <ListItemIcon>
                                 {index % 2 === 0 ? <SettingsIcon /> : <ContactMailIcon />}
                             </ListItemIcon>
@@ -128,26 +131,29 @@ function TopBar(props) {
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                         Threat Detection Dashboard
                     </Typography>
-                    <div 
-                        className={`notification-icon ${alerts.length > 0 ? 'active' : ''}`} 
-                        onClick={handleNotificationsClick}
-                        style={{ position: 'relative', cursor: 'pointer' }}
-                    >
-                        <NotificationsIcon />
-                        {alerts.length > 0 && (
-                            <span className="notification-count">{alerts.length}</span>
-                        )}
-                    </div>
-                    {notificationsOpen && (
+                    
+                    
+                <div 
+                    className={`notification-icon ${notificationList.length > 0 ? 'active' : ''}`} 
+                    onClick={handleNotificationsClick}
+                    style={{ position: 'relative', cursor: 'pointer' }}
+                >
+                    <NotificationsIcon />
+                    {notificationList.length > 0 && (
+                        <span className="notification-count">{notificationList.length}</span>
+                    )}
+                </div>
+
+                {notificationsOpen && (
                     <div className="notification-dropdown">
-                        <h2><b>New Alerts</b></h2>
+                        <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
                         {notificationList.length === 0 ? (
-                            <p>No new alerts</p>
+                            <p style={{ color: 'black' }}>No new alerts</p>
                         ) : (
                             <ul>
                                 {notificationList.map((alert, index) => (
                                     <li key={index}>
-                                        <p>{alert.name} - {alert.severity}</p>
+                                        <p style={{ color: 'black' }}>{alert.name} - {alert.severity}</p>
                                         <button 
                                             className="clear-alert-button" 
                                             onClick={() => clearAlert(index)}
@@ -201,6 +207,7 @@ function TopBar(props) {
 
 TopBar.propTypes = {
     window: PropTypes.func,
+    alerts: PropTypes.array, // Ensure alerts is an array
 };
 
 export default TopBar;
