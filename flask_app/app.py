@@ -10,8 +10,15 @@ import sqlite3
 import sqlalchemy.exc
 from flask_socketio import SocketIO, emit
 import os
+from Crypto.Cipher import AES
 
 app = Flask(__name__)
+
+demo_decryption_key = "kwhbqlwrejbfqlwjrbfblqoierb"
+def decrypt(password):
+    global demo_decryption_key
+    obj = AES.new(demo_decryption_key, AES.MODE_CBC, "")
+    return obj.decrypt(password)
 
 CORS(app)
 
@@ -121,7 +128,7 @@ def login():
         print(request)
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
-        if user and check_password_hash(user.password, data['password']):
+        if user and check_password_hash(user.password, decrypt(data['password'])):
             response = jsonify({'success': True, 'username':data['username']})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
