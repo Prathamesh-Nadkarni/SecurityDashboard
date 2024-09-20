@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import FilteredTable from './FilteredTable/FilteredTable';
 import TopBar from './TopBar/TopBar';
@@ -23,14 +22,12 @@ const Dashboard = ({ setAuth }) => {
     fromDate: '',
     toDate: ''
   });
-  const [menuOpen, setMenuOpen] = useState(false);
   const [showPieChart, setShowPieChart] = useState(true);
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);
   };
 
   const username = localStorage.getItem('username');
-  const navigate = useNavigate();
   const socket = io('http://localhost:5000');
 
   useEffect(() => {
@@ -177,11 +174,9 @@ const Dashboard = ({ setAuth }) => {
       {/* <TopBar></TopBar> */}
       <TopBar alerts={newAlerts} setAlerts={setAlerts}>
         <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
-          <h1 className="title">Dashboard</h1>
+          <h1 className="title">Alerts</h1>
           {alerts.length > 0 ? (
             <div className="alerts-table">
-              <h2 className="alerts-heading">Alerts</h2>
-
               <Filter filters={filters}
                 handleFilterChange={handleFilterChange}
                 handleSeverityChange={handleSeverityChange}

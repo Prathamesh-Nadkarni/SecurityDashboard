@@ -206,19 +206,6 @@ tbody tr:hover {
   background-color: #0056b3;
 }
 
-/* Date Filter */
-.date-filter {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.date-filter input {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 /* Alert Severity */
 .severity-high {
   background-color: #f96d78;

@@ -11,7 +11,7 @@ const ProcessingPage = () => {
   useEffect(() => {
     const interval = setInterval(fetchFileStatuses, 1000); // Polling every 5 seconds
     return () => clearInterval(interval); // Clean up the interval on unmount
-
+    // TODO review functionality
     // Initial fetch
     fetchFileStatuses();
 

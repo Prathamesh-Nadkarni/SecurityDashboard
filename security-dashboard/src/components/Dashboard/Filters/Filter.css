@@ -27,7 +27,6 @@
 
 .filter-container input,
 .clear-filters-btn {
-    padding: 10px;
     border-radius: 4px;
 }
 
@@ -74,6 +73,27 @@
     transform: translateY(0);
 }
 
+
+.toggle-chart-btn:hover {
+    background-color: #0056b3;
+}
+
+.no-margin button {
+    margin-top: 0px;
+    font-size: 0.75rem;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.no-margin button:hover {
+    background-color: #0056b3;
+}
+
 .toggle-chart-btn {
     background-color: #007bff;
     color: white;
@@ -87,6 +107,21 @@
     transition: background-color 0.3s ease;
 }
 
-.toggle-chart-btn:hover {
-    background-color: #0056b3;
+input {
+    text-align: center;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Date Filter */
+.date-filter {
+    display: flex;
+    gap: 10px;
+}
+
+.date-filter input {
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

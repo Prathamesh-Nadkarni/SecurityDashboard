@@ -10,8 +10,14 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
             <input name="name" placeholder="Filter by Name" value={filters.name} onChange={handleFilterChange} />
             <input name="machine" placeholder="Filter by Machine" value={filters.machine} onChange={handleFilterChange} />
 
+            {/* Date Filter */}
+            <div className="date-filter">
+                <input type="date" name="fromDate" value={filters.fromDate} onChange={handleFilterChange} placeholder="From" />
+                <input type="date" name="toDate" value={filters.toDate} onChange={handleFilterChange} placeholder="To" />
+            </div>
+
             {/* Severity Dropdown */}
-            <div className="severity-dropdown">
+            <div className="severity-dropdown no-margin">
                 <button className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     {filters.severity.length > 0 ? filters.severity.join(', ') : 'Select Severity'}
                 </button>
@@ -20,11 +26,7 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
                 )}
             </div>
 
-            {/* Date Filter */}
-            <div className="date-filter">
-                <input type="date" name="fromDate" value={filters.fromDate} onChange={handleFilterChange} placeholder="From" />
-                <input type="date" name="toDate" value={filters.toDate} onChange={handleFilterChange} placeholder="To" />
-            </div>
+
 
             {/* Clear Filters Button */}
         </div>
