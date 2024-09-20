@@ -5,6 +5,7 @@ import FilteredTable from './FilteredTable/FilteredTable';
 import TopBar from './TopBar/TopBar';
 import Graph from './Graph/Graph';
 import Filter from './Filters/Filter';
+import ResponsiveDrawer from './TopBar/ExampleBar';
 
 const Dashboard = ({ setAuth }) => {
   const [alerts, setAlerts] = useState([]);
@@ -138,9 +139,37 @@ const Dashboard = ({ setAuth }) => {
   };
 
   return (
-    <div className={`dashboard ${menuOpen ? 'menu-open' : ''}`}>
-      <TopBar></TopBar>
-      <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
+    <>
+      {/* <TopBar></TopBar> */}
+      <ResponsiveDrawer>
+        <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
+          <h1 className="title">Dashboard</h1>
+
+          {alerts.length > 0 ? (
+            <div className="alerts-table">
+              <h2 className="alerts-heading">Alerts</h2>
+
+              <Filter filters={filters}
+                handleFilterChange={handleFilterChange}
+                handleSeverityChange={handleSeverityChange}
+                clearAllFilters={clearAllFilters}
+                togglePieChart={togglePieChart}
+                showPieChart={showPieChart}
+              ></Filter>
+
+              {showPieChart && <Graph alerts={alerts}></Graph>}
+
+              <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
+
+            </div>
+          ) : (
+            <div className="no-alerts">
+              <p>No alerts found.</p>
+            </div>
+          )}
+        </div>
+      </ResponsiveDrawer>
+      {/* <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
         <h1 className="title">Dashboard</h1>
 
         {alerts.length > 0 ? (
@@ -165,8 +194,8 @@ const Dashboard = ({ setAuth }) => {
             <p>No alerts found.</p>
           </div>
         )}
-      </div>
-    </div>
+      </div> */}
+    </>
   );
 };
 
