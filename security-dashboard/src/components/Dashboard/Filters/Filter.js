@@ -31,7 +31,7 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
                 Clear All Filters
             </button>
             <button className="toggle-chart-btn" onClick={togglePieChart}>
-                {showPieChart ? 'Hide Graph' : 'Show Graph'}
+                {showPieChart ? 'Hide Graphs' : 'Show Graphs'}
             </button>
         </div>
     </>
