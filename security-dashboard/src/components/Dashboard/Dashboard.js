@@ -5,7 +5,6 @@ import FilteredTable from './FilteredTable/FilteredTable';
 import TopBar from './TopBar/TopBar';
 import Graph from './Graph/Graph';
 import Filter from './Filters/Filter';
-import ResponsiveDrawer from './TopBar/ExampleBar';
 
 const Dashboard = ({ setAuth }) => {
   const [alerts, setAlerts] = useState([]);
@@ -141,7 +140,7 @@ const Dashboard = ({ setAuth }) => {
   return (
     <>
       {/* <TopBar></TopBar> */}
-      <ResponsiveDrawer>
+      <TopBar>
         <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
           <h1 className="title">Dashboard</h1>
 
@@ -168,7 +167,7 @@ const Dashboard = ({ setAuth }) => {
             </div>
           )}
         </div>
-      </ResponsiveDrawer>
+      </TopBar>
       {/* <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
         <h1 className="title">Dashboard</h1>
 
