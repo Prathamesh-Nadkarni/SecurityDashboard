@@ -14,6 +14,7 @@ const Dashboard = ({ setAuth }) => {
   const [sortConfig, setSortConfig] = useState(null);
   const [newAlerts, setNewAlerts] = useState([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notificationList, setNotificationList] = useState(alerts);
   const [filters, setFilters] = useState({
     id: '',
     name: '',
@@ -24,33 +25,34 @@ const Dashboard = ({ setAuth }) => {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPieChart, setShowPieChart] = useState(true);
-  const socket = io('http://127.0.0.1:5000');
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);
   };
 
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
+  const socket = io('http://localhost:5000');
 
   useEffect(() => {
     const socket = io('http://localhost:5000');
 
-    // Log the socket connection status
     socket.on('connect', () => {
         console.log('Socket connected:', socket.id);
     });
 
     socket.on('new_alert', (alert) => {
-        console.log('New alert:', alert);
+      socket.on('new_alert', (alert) => {
         setAlerts((prevAlerts) => [...prevAlerts, alert]);
-        fetchAlerts();
+        setNewAlerts((prevNewAlerts) => [...prevNewAlerts, alert]);
+        setNotificationList((prevNotifications) => [...prevNotifications, alert]);
+    });
     });
 
     return () => {
         socket.disconnect();
         console.log('Socket disconnected');
     };
-  }, []);
+}, [setNewAlerts]);
 
   useEffect(() => {
     fetchAlerts();
@@ -173,10 +175,9 @@ const Dashboard = ({ setAuth }) => {
   return (
     <>
       {/* <TopBar></TopBar> */}
-      <TopBar>
+      <TopBar alerts={newAlerts} setAlerts={setAlerts}>
         <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
           <h1 className="title">Dashboard</h1>
-
           {alerts.length > 0 ? (
             <div className="alerts-table">
               <h2 className="alerts-heading">Alerts</h2>
@@ -201,69 +202,7 @@ const Dashboard = ({ setAuth }) => {
           )}
         </div>
       </TopBar>
-       <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
-        <h1 className="title">Dashboard</h1>
 
-        {alerts.length > 0 ? (
-          <div className="alerts-table" style={{ flex: showPieChart ? '0 1 auto' : '1 1 100%', transition: 'flex 0.3s ease' }}>
-            <h2 className="alerts-heading">Alerts</h2>
-
-
-
-
-            <div className="notification-container" style={{ position: 'relative' }}>
-      <div 
-        className={`notification-icon ${newAlerts.length > 0 ? 'active' : ''}`} 
-        onClick={() => setNotificationsOpen(!notificationsOpen)}
-      >
-        {/* SVG Code Here */}
-        {newAlerts.length > 0 && (
-          <span className="notification-count">{newAlerts.length}</span>
-        )}
-      </div>
-
-      {notificationsOpen && (
-        <div className="notification-dropdown">
-          <h2><b>New Alerts</b></h2>
-          {newAlerts.length === 0 ? (
-            <p>No new alerts</p>
-          ) : (
-            <ul>
-              {newAlerts.map((alert, index) => (
-                <li key={index}>
-                  <p>{alert.name} - {alert.severity}</p>
-                  <button className="clear-alert-button" onClick={() => clearAlert(index)}>Clear</button>
-                </li>
-              ))}
-            </ul>
-          )}
-          {newAlerts.length > 0 && (
-            <button className="clear-all-button" onClick={clearAllAlerts}>Clear All</button>
-          )}
-        </div>
-      )}
-    </div>
-
-
-            <Filter filters={filters}
-              handleFilterChange={handleFilterChange}
-              handleSeverityChange={handleSeverityChange}
-              clearAllFilters={clearAllFilters}
-              togglePieChart={togglePieChart}
-              showPieChart={showPieChart}
-            ></Filter>
-
-            {showPieChart && <Graph alerts={alerts}></Graph>}
-
-            <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
-
-          </div>
-        ) : (
-          <div className="no-alerts">
-            <p>No alerts found.</p>
-          </div>
-        )}
-      </div>
     </>
   );
 };
