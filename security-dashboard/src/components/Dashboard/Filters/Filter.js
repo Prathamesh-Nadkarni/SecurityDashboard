@@ -2,7 +2,7 @@ import { useState } from "react";
 import SeverityOptions from "./SeverityOptions/SeverityOptions";
 import "./Filter.css"
 
-export default function Filter({ filters, handleFilterChange, handleSeverityChange, clearAllFilters, togglePieChart, showPieChart }) {
+export default function Filter({ filters, handleFilterChange, handleSeverityChange, clearAllFilters, togglePieChart, showPieChart, addAlerts}) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return <>
@@ -36,6 +36,9 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
             </button>
             <button className="toggle-chart-btn" onClick={togglePieChart}>
                 {showPieChart ? 'Hide Graphs' : 'Show Graphs'}
+            </button>
+            <button className="toggle-chart-btn" onClick={addAlerts}>
+                Add New Alerts
             </button>
         </div>
     </>

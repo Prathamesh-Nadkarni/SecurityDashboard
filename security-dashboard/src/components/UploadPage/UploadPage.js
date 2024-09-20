@@ -6,11 +6,20 @@ import TopBar from '../Dashboard/TopBar/TopBar';
 const UploadPage = () => {
   const [file, setFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    setErrorMessage(''); // Clear any previous error message when a new file is selected
+    const selectedFile = event.target.files[0];
+    // Validate file type (only CSV files)
+    if (selectedFile && selectedFile.type !== 'text/csv') {
+      setErrorMessage('Please upload a valid CSV file.');
+      setFile(null);
+    } else {
+      setFile(selectedFile);
+      setErrorMessage('');
+    }
   };
 
   const handleUpload = async () => {
@@ -18,6 +27,8 @@ const UploadPage = () => {
       setErrorMessage('Please select a file to upload.');
       return;
     }
+
+    setIsLoading(true); // Show loading indicator
 
     const formData = new FormData();
     formData.append('file', file);
@@ -29,7 +40,8 @@ const UploadPage = () => {
       });
 
       if (response.ok) {
-        navigate('/processing');
+        setSuccessMessage('File uploaded successfully.');
+        setTimeout(() => navigate('/processing'), 1500); // Redirect after 1.5 seconds
       } else {
         const data = await response.json();
         if (data.error === 'This file has already been uploaded. Please try a different file.') {
@@ -40,21 +52,21 @@ const UploadPage = () => {
       }
     } catch (error) {
       setErrorMessage('Error uploading file.');
+    } finally {
+      setIsLoading(false); // Hide loading indicator
     }
   };
 
   return (
     <TopBar>
       <div className="upload-page">
-        <button onClick={() => navigate('/')} className="home-button-up">
-          <div className="home-icon-circle-up">
-            <i className="fa fa-home home-icon-up"></i>
-          </div>
-        </button>
         <h1 className="title">Upload CSV</h1>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
         <input type="file" onChange={handleFileChange} className="file-input" />
-        <button onClick={handleUpload} className="upload-button">Upload</button>
+        <button onClick={handleUpload} className="upload-button" disabled={isLoading}>
+          {isLoading ? 'Uploading...' : 'Upload'}
+        </button>
       </div>
     </TopBar>
   );

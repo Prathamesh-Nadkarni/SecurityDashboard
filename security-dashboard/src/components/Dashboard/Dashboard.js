@@ -26,7 +26,9 @@ const Dashboard = ({ setAuth }) => {
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);
   };
-
+  const addAlerts = () => {
+    navigate('/upload');
+  };
   const username = localStorage.getItem('username');
   const socket = io('http://localhost:5000');
 
@@ -183,12 +185,12 @@ const Dashboard = ({ setAuth }) => {
                 clearAllFilters={clearAllFilters}
                 togglePieChart={togglePieChart}
                 showPieChart={showPieChart}
+                addAlerts={addAlerts}
               ></Filter>
 
               {showPieChart && <Graph alerts={alerts}></Graph>}
 
               <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
-
             </div>
           ) : (
             <div className="no-alerts">
@@ -196,6 +198,7 @@ const Dashboard = ({ setAuth }) => {
             </div>
           )}
         </div>
+        
       </TopBar>
 
     </>
