@@ -28,7 +28,9 @@ const Dashboard = ({ setAuth }) => {
   const togglePieChart = () => {
     setShowPieChart(prevState => !prevState);
   };
-
+  const addAlerts = () => {
+    navigate('/upload');
+  };
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
   const socket = io('http://localhost:5000');
@@ -177,7 +179,7 @@ const Dashboard = ({ setAuth }) => {
       {/* <TopBar></TopBar> */}
       <TopBar alerts={newAlerts} setAlerts={setAlerts}>
         <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
-          <h1 className="title">Dashboard</h1>
+          <h1 className="title"></h1>
           {alerts.length > 0 ? (
             <div className="alerts-table">
               <h2 className="alerts-heading">Alerts</h2>
@@ -188,12 +190,12 @@ const Dashboard = ({ setAuth }) => {
                 clearAllFilters={clearAllFilters}
                 togglePieChart={togglePieChart}
                 showPieChart={showPieChart}
+                addAlerts={addAlerts}
               ></Filter>
 
               {showPieChart && <Graph alerts={alerts}></Graph>}
 
               <FilteredTable filteredAlerts={filteredAlerts} sortData={sortData} sortSeverity={sortSeverity}></FilteredTable>
-
             </div>
           ) : (
             <div className="no-alerts">
@@ -201,6 +203,7 @@ const Dashboard = ({ setAuth }) => {
             </div>
           )}
         </div>
+        
       </TopBar>
 
     </>

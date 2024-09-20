@@ -24,6 +24,8 @@
     "@emotion/styled": "11.13.0",
     "socket.io-client": "latest",
     "@mui/icons-material" : "latest",
+    "react-bootstrap": "latest",
+    "bootstrap": "latest",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

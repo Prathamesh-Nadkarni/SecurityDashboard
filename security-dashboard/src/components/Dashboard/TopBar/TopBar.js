@@ -42,6 +42,7 @@ function TopBar(props) {
         setNotificationList((prevNotifications) => prevNotifications.filter((_, i) => i !== index));
     };
     
+    
     const clearAllAlerts = () => {
         setNotificationList([]);
     };

@@ -42,6 +42,10 @@ const Profile = () => {
     setIsChanged(true);
   };
 
+  const handleEditProfilePicture = () => {
+    navigate('/upload');
+  };
+
   const handleSave = async () => {
     const formData = new FormData();
     formData.append('name', userInfo.name || 'Unknown');
@@ -83,7 +87,6 @@ const Profile = () => {
   return (
     <TopBar>
       <div className="profile-page">
-        <button className="home-button" onClick={handleHomeClick}>Home</button>
         <h1>Profile</h1>
         <div className="profile-picture">
           <img src={'https://www.w3schools.com/html/pic_trulli.jpg'} alt="Profile" />
