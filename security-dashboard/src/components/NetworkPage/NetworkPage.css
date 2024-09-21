@@ -39,13 +39,14 @@
   transform: translateY(-2px); /* Slight lift effect */
 }
 
+
+
 .search-bar {
   position: fixed;
-  top: 60px; /* Below the floating buttons */
-  left: 10px;
-  z-index: 100;
+  top: 12px; /* Below the floating buttons */
+  left: 210px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px; /* Spacing between inputs */
   padding: 10px;
   background-color: white; /* Background for better visibility */
@@ -74,13 +75,24 @@
 }
 
 
-.search-bar input {
+.search-bar {
+  display: flex;
+  align-items: center; /* Vertically align elements */
+  gap: 10px; /* Add space between the items */
   padding: 10px;
-  font-size: 16px;
+  background-color: #f0f0f0; /* Optional: background for visibility */
   border-radius: 5px;
+}
+
+.search-bar input[type="text"] {
+  padding: 5px;
+  font-size: 14px;
   border: 1px solid #ccc;
-  width: 250px;
-  transition: border-color 0.3s ease; /* Transition for focus effect */
+  border-radius: 4px;
+}
+
+.search-bar input[type="checkbox"] {
+  margin-left: 10px; /* Space between checkbox and text */
 }
 
 .search-bar input:focus {

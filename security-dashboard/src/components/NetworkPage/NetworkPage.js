@@ -206,24 +206,27 @@ const NetworkPage = () => {
   <button className="floating-back-button" onClick={() => navigate(-1)}>Back</button>
   <div className="options-container">
     <button className="floating-toggle-button" onClick={toggleMenu}>
-      {menuVisible ? "Close Menu" : "Menu"}
+      {menuVisible ? "Close Search" : "Graph Search"}
     </button>
     <div className={`search-bar ${menuVisible ? "visible" : "hidden"}`}>
       <input
         type="text"
-        placeholder="Search nodes..."
+        placeholder="Search Edges"
         value={searchQuery}
         onChange={handleSearchChange}
       />
       <input
         type="text"
-        placeholder="Filter by filename..."
+        placeholder="Search filenames"
         value={fileNameFilter}
         onChange={handleFileNameFilterChange}
       />
-      <button onClick={handleFilterToggle}>
-        {filterTransparent ? "Show All" : "Show Filtered"}
-      </button>
+      <input
+        type="checkbox"
+        checked={!filterTransparent}
+        onChange={handleFilterToggle}
+      />
+      Show Transparent Edges
     </div>
   </div>
 </div>
