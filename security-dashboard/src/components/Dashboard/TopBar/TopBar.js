@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import { GridArrowUpwardIcon } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -23,11 +23,13 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+import UploadPage from '../../UploadPage/UploadPage';
 
 const drawerWidth = 240;
 
 function TopBar(props) {
-    const { alerts = [], setAlerts, window, setAuth } = props; // Set default value for alerts
+    const { alerts = [], setAlerts, window: prevWindow, setAuth } = props; // Set default value for alerts
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [drawerW, setDrawerW] = useState(0);
@@ -42,8 +44,8 @@ function TopBar(props) {
     const clearAlert = (index) => {
         setNotificationList((prevNotifications) => prevNotifications.filter((_, i) => i !== index));
     };
-    
-    
+
+
     const clearAllAlerts = () => {
         setNotificationList([]);
     };
@@ -67,9 +69,18 @@ function TopBar(props) {
 
     const handleLogout = () => {
         setAuth(false);
-        localStorage.setItem('auth', 'false'); 
-        navigate('/login'); 
-      };
+        localStorage.setItem('auth', 'false');
+        navigate('/login', );
+    };
+
+    const handleSecondDrawerClick = (index) => {
+        console.log(index);
+        if (index % 2 === 0) {
+            navigate('/upload');
+        } else {
+            window.location.replace('https://sts.cs.illinois.edu/');
+        }
+    }
 
     const handleNotificationsClick = () => {
         setNotificationsOpen((prev) => !prev);
@@ -77,7 +88,7 @@ function TopBar(props) {
 
     const drawer = (
         <div>
-            <Toolbar><img src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png" class="h-8" alt="Flowbite Logo" /></Toolbar>
+            <Toolbar><img src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png" className="h-8" alt="Flowbite Logo" /></Toolbar>
             <Divider />
             <List>
                 {['Profile', 'Dashboard'].map((text) => (
@@ -99,11 +110,11 @@ function TopBar(props) {
             </List>
             <Divider />
             <List>
-                {['Settings', 'Contact'].map((text, index) => (
+                {['Upload Alerts', 'Contact'].map((text, index) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton component="a" href="https://sts.cs.illinois.edu/" target="_blank" rel="noopener noreferrer">
+                        <ListItemButton onClick={() => handleSecondDrawerClick(index)} rel="noopener noreferrer">
                             <ListItemIcon>
-                                {index % 2 === 0 ? <SettingsIcon /> : <ContactMailIcon />}
+                                {index % 2 === 0 ? <GridArrowUpwardIcon /> : <ContactMailIcon />}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -113,7 +124,7 @@ function TopBar(props) {
         </div>
     );
 
-    const container = window !== undefined ? () => window().document.body : undefined;
+    const container = prevWindow !== undefined ? () => prevWindow().document.body : undefined;
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -139,55 +150,64 @@ function TopBar(props) {
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                         Threat Detection Dashboard
                     </Typography>
-                    
-                    
-                <div 
-                    className={`notification-icon ${notificationList.length > 0 ? 'active' : ''}`} 
-                    onClick={handleNotificationsClick}
-                    style={{ position: 'relative', cursor: 'pointer' }}
-                >
-                    <NotificationsIcon />
-                    {notificationList.length > 0 && (
-                        <span className="notification-count">{notificationList.length}</span>
-                    )}
-                </div>
 
-                
 
-                {notificationsOpen && (
-                    <div className="notification-dropdown">
-                        <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
-                        {notificationList.length === 0 ? (
-                            <p style={{ color: 'black' }}>No new alerts</p>
-                        ) : (
-                            <ul>
-                                {notificationList.map((alert, index) => (
-                                    <li key={index}>
-                                        <p style={{ color: 'black' }}>{alert.name} - {alert.severity}</p>
-                                        <button 
-                                            className="clear-alert-button" 
-                                            onClick={() => clearAlert(index)}
-                                        >
-                                            Clear
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                    <div
+                        className={`${notificationList.length > 0 ? 'active' : ''}`}
+                        onClick={handleNotificationsClick}
+                        style={{ position: 'relative', cursor: 'pointer' }}
+                    >
+                        <IconButton
+                            color="inherit"
+                            edge="end"
+                            onClick={handleNotificationsClick}
+                            sx={{ mr: 2 }}
+                        >
+                            <NotificationsIcon />
+                        </IconButton>
                         {notificationList.length > 0 && (
-                            <button className="clear-all-button" onClick={clearAllAlerts}>
-                                Clear All
-                            </button>
+                            <span className="notification-count">{notificationList.length}</span>
                         )}
                     </div>
-                    
-                )}
-                 <div 
-                    className={`logout-icon`} 
-                    onClick={handleLogout}
+
+
+
+                    {notificationsOpen && (
+                        <div className="notification-dropdown">
+                            <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
+                            {notificationList.length === 0 ? (
+                                <p style={{ color: 'black' }}>No new alerts</p>
+                            ) : (
+                                <ul>
+                                    {notificationList.map((alert, index) => (
+                                        <li key={index}>
+                                            <p style={{ color: 'black' }}>{alert.name} - {alert.severity}</p>
+                                            <button
+                                                className="clear-alert-button"
+                                                onClick={() => clearAlert(index)}
+                                            >
+                                                Clear
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            {notificationList.length > 0 && (
+                                <button className="clear-all-button" onClick={clearAllAlerts}>
+                                    Clear All
+                                </button>
+                            )}
+                        </div>
+
+                    )}
+                    <IconButton
+                        color="inherit"
+                        edge="end"
+                        onClick={handleLogout}
+                        sx={{ mr: 2, ml: 0 }}
                     >
-                    <LogoutIcon />
-                </div>
+                        <LogoutIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Box
@@ -225,7 +245,7 @@ function TopBar(props) {
 TopBar.propTypes = {
     window: PropTypes.func,
     alerts: PropTypes.array,
-    setAuth: PropTypes.func.isRequired,
+    setAuth: PropTypes.func,
 };
 
 
