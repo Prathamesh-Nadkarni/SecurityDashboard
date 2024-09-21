@@ -1,6 +1,31 @@
 .notification-icon {
     position: relative;
     cursor: pointer;
+    margin-right: 20px;
+}
+
+.logout-icon {
+    position: relative;
+    cursor: pointer;
+    color: red;
+}
+
+.logout-icon:hover .logout-text {
+    display: block; /* Show the text when hovering */
+}
+
+.logout-text {
+    display: none; /* Initially hide the text */
+    position: absolute;
+    top: 50%; /* Adjust positioning relative to the icon */
+    left: 100%; /* Position the text next to the icon */
+    transform: translateY(-50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap; /* Prevent text from wrapping */
+    z-index: 1000; /* Ensure the text appears on top */
 }
 
 .notification-icon.active {

@@ -21,12 +21,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 function TopBar(props) {
-    const { alerts = [], setAlerts, window } = props; // Set default value for alerts
+    const { alerts = [], setAlerts, window, setAuth } = props; // Set default value for alerts
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [drawerW, setDrawerW] = useState(0);
@@ -64,13 +65,19 @@ function TopBar(props) {
         }
     };
 
+    const handleLogout = () => {
+        setAuth(false);
+        localStorage.setItem('auth', 'false'); 
+        navigate('/login'); 
+      };
+
     const handleNotificationsClick = () => {
         setNotificationsOpen((prev) => !prev);
     };
 
     const drawer = (
         <div>
-            <Toolbar />
+            <Toolbar><img src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png" class="h-8" alt="Flowbite Logo" /></Toolbar>
             <Divider />
             <List>
                 {['Profile', 'Dashboard'].map((text) => (
@@ -145,6 +152,8 @@ function TopBar(props) {
                     )}
                 </div>
 
+                
+
                 {notificationsOpen && (
                     <div className="notification-dropdown">
                         <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
@@ -171,7 +180,14 @@ function TopBar(props) {
                             </button>
                         )}
                     </div>
+                    
                 )}
+                 <div 
+                    className={`logout-icon`} 
+                    onClick={handleLogout}
+                    >
+                    <LogoutIcon />
+                </div>
                 </Toolbar>
             </AppBar>
             <Box
@@ -208,7 +224,9 @@ function TopBar(props) {
 
 TopBar.propTypes = {
     window: PropTypes.func,
-    alerts: PropTypes.array, // Ensure alerts is an array
+    alerts: PropTypes.array,
+    setAuth: PropTypes.func.isRequired,
 };
+
 
 export default TopBar;

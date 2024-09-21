@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import { encrypt } from '../../utils/crypt';
+import CryptoJS from 'crypto-js';
+
 const authenticateYubikey = async (username) => {
   const publicKeyOptions = {
     challenge: new Uint8Array(32), // Replace with real challenge from backend
@@ -22,6 +24,20 @@ const authenticateYubikey = async (username) => {
     console.error('Yubikey authentication failed:', err);
     throw new Error('Yubikey authentication failed');
   }
+};
+
+const encryptPassword = (password, key) => {
+  const iv = CryptoJS.lib.WordArray.random(16);
+  const encrypted = CryptoJS.AES.encrypt(password, CryptoJS.enc.Utf8.parse(key), {
+      iv: iv,
+      padding: CryptoJS.pad.Pkcs7,
+      mode: CryptoJS.mode.CBC
+  });
+
+  console.log("IV (Base64):", iv.toString(CryptoJS.enc.Base64));
+  console.log("Ciphertext (Base64):", encrypted.ciphertext.toString(CryptoJS.enc.Base64));
+
+  return iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
 };
 
 const LoginPage = ({ setAuth }) => {
@@ -52,13 +68,14 @@ const LoginPage = ({ setAuth }) => {
           }),
         });
       } else {
-        password = encrypt(password);
+        const key = 'mysecretkey123456';
+        const encryptedPassword = encryptPassword('your_password', key); // Encrypt the password here
         response = await fetch('http://127.0.0.1:5000/api/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify({ username, password: encryptedPassword }),
         });
       }
 

@@ -11,14 +11,43 @@ import sqlalchemy.exc
 from flask_socketio import SocketIO, emit
 import os
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+import base64
+
 
 app = Flask(__name__)
 
-demo_decryption_key = "kwhbqlwrejbfqlwjrbfblqoierb"
-def decrypt(password):
+demo_decryption_key = b"mysecretkey12345"
+
+demo_decryption_key = b"mysecretkey12345"
+
+def decrypt(encrypted_password):
     global demo_decryption_key
-    obj = AES.new(demo_decryption_key, AES.MODE_CBC, "")
-    return obj.decrypt(password)
+
+    # Decode the base64-encoded password
+    encrypted_data = base64.b64decode(encrypted_password)
+
+    # Check if the encrypted data length is at least 16 bytes for IV
+    if len(encrypted_data) < 16:
+        print("Invalid encrypted data length.")
+        return None
+
+    # Extract the IV and the encrypted data
+    iv = encrypted_data[:16]
+    encrypted_data = encrypted_data[16:]
+
+    print("IV:", iv)
+    print("Encrypted data length:", len(encrypted_data))
+
+    # Create the AES cipher object
+    obj = AES.new(demo_decryption_key, AES.MODE_CBC, iv)
+
+    try:
+        decrypted_data = unpad(obj.decrypt(encrypted_data), AES.block_size)
+        return decrypted_data.decode('utf-8')
+    except ValueError as e:
+        print("Decryption error:", e)
+        return None
 
 CORS(app)
 
@@ -128,8 +157,11 @@ def login():
         print(request)
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
-        if user and check_password_hash(user.password, decrypt(data['password'])):
-            response = jsonify({'success': True, 'username':data['username']})
+        print("Password: ", data['password'])
+        decrypted_password = decrypt(data['password'])  # Adjust to call decrypt correctly
+        print("Decrypted: ", decrypted_password)
+        if user and check_password_hash(user.password, decrypted_password):
+            response = jsonify({'success': True, 'username': data['username']})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         

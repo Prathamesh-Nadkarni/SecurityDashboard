@@ -176,7 +176,7 @@ const Dashboard = ({ setAuth }) => {
   return (
     <>
       {/* <TopBar></TopBar> */}
-      <TopBar alerts={newAlerts} setAlerts={setAlerts}>
+      <TopBar alerts={newAlerts} setAlerts={setAlerts} setAuth={setAuth}>
         <div className="container-fluid main-content scroll" style={{ "position": "relative" }}>
           <h1 className="title">Alerts</h1>
           {alerts.length > 0 ? (

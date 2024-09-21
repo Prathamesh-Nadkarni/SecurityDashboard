@@ -37,7 +37,7 @@ export default function Graph({ alerts }) {
         labels: ['High', 'Medium', 'Low'],
         datasets: [{
             data: [severityCounts.high, severityCounts.medium, severityCounts.low],
-            backgroundColor: ['#dc3545', '#ffc107', '#28a745'],
+            backgroundColor: ['#C62828', '#FFA726', '#66BB6A'],
             borderColor: ['#fff', '#fff', '#fff'],
             borderWidth: 1
         }]
@@ -47,11 +47,22 @@ export default function Graph({ alerts }) {
         labels: Object.keys(machineCounts),  // Use machine names as labels
         datasets: [{
             data: Object.values(machineCounts),  // Use machine counts as data
-            backgroundColor: ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#6f42c1', '#3f10f1' ],  // Add more colors if you have more machines
+            backgroundColor: getColorScheme(Object.values(machineCounts)),
             borderColor: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff'],
             borderWidth: 1
         }]
     };
+
+    function getColorScheme(values) {
+        const colors = ['#5cb85c', '#f0ad4e', '#d9534f', '#5bc0de', '#5e5e5e', '#0275d8'];
+        
+        // Create an array of indices and sort them based on values
+        const sortedIndices = values.map((value, index) => index)
+            .sort((a, b) => values[b] - values[a]);
+    
+        // Assign colors based on sorted indices
+        return sortedIndices.map(index => colors[index]);
+    }
 
     return <>
         <div className="card">
