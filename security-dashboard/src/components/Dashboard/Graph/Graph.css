@@ -1,31 +1,99 @@
 /* Pie Chart Styling */
 .pie-chart {
-    width: 300px;
-    height: 300px;
+    width: 280px; /* Slightly smaller for better spacing */
+    height: 280px;
+    margin-right: 50px; /* Reduced margins */
+    margin-left: 50px;
+    background-color: #ffffff; /* Added background for clarity */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+    padding: 1rem;
 }
 
 .card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12); /* Slightly stronger shadow */
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ffffff; /* Soft border */
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .card-title {
-    font-size: 1.5rem;
+    font-size: 1.7rem; /* Slightly larger */
     font-weight: bold;
+    color: #333; /* Darker for better readability */
 }
 
-.pie-chart-container {
+/* Flexbox layout for charts to display them side by side */
+.pie-chart-container, .line-chart-container {
     display: flex;
+    justify-content: space-evenly;
     align-items: center;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 2rem; /* Increased gap between charts */
+    margin: 30px 0; /* Increased margin for breathing room */
+    padding: 15px;
+    background-color: #ffffff; /* Lighter background */
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.pie-chart canvas {
+    width: 100%; /* Ensure full width */
+    height: 280px;
+    max-width: 100%; /* Maintain responsiveness */
+}
+
+.line-chart-container canvas {
+    width: 550px; /* Adjusted width for better balance */
+    height: 350px;
+    max-width: 100%;
+}
+
+.line-chart-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.line-chart-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #007bff; /* Use blue for consistency with other elements */
+}
+
+/* Make sure charts align properly on smaller screens */
+@media (max-width: 768px) {
+    .pie-chart, .line-chart-container canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+    }
+
+    .pie-chart-container, .line-chart-container {
+        flex-direction: column; /* Stack charts vertically on smaller screens */
+    }
+}
+
+/* Add responsive behavior for three charts side by side */
+@media (min-width: 769px) {
+    .chart-grid {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 2rem;
+    }
 }

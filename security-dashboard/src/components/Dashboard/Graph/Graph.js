@@ -1,8 +1,8 @@
-import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip, LineElement, LinearScale, PointElement, CategoryScale } from 'chart.js';
+import { Pie, Line } from 'react-chartjs-2';
 import "./Graph.css";
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement);
+ChartJS.register(Title, Tooltip, Legend, ArcElement, LineElement, LinearScale, PointElement, CategoryScale);
 
 export default function Graph({ alerts }) {
 
@@ -31,8 +31,26 @@ export default function Graph({ alerts }) {
         return machineCounts;
     };
 
+
+    const getAlertsOverTime = () => {
+        const alertCountsByDate = {};
+        alerts.forEach(alert => {
+            if(alert.occurred_on != 'Varied')
+            {
+                const date = new Date(alert.occurred_on).toLocaleDateString(); // Format the date as needed
+                alertCountsByDate[date] = (alertCountsByDate[date] || 0) + 1;
+            }
+            
+        });
+        const sortedAlertCountsByDate = Object.entries(alertCountsByDate)
+            .sort((a, b) => new Date(a[0]) - new Date(b[0]));
+        const sortedAlertCountsObject = Object.fromEntries(sortedAlertCountsByDate);
+        return sortedAlertCountsObject;
+    };
+
     const severityCounts = getSeverityCounts();
     const machineCounts = getMachineCounts();
+    const alertsOverTime = getAlertsOverTime();
     const pieSeverityData = {
         labels: ['High', 'Medium', 'Low'],
         datasets: [{
@@ -64,21 +82,70 @@ export default function Graph({ alerts }) {
         return sortedIndices.map(index => colors[index]);
     }
 
+    const lineOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    };
+
+    const pieOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            }
+        }
+    };
+
+    const lineData = {
+        labels: Object.keys(alertsOverTime), // Dates
+        datasets: [{
+            label: 'Alerts Over Time',
+            data: Object.values(alertsOverTime), // Counts
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            fill: true,
+            tension: 0.1,
+        }]
+    };
+
     return <>
         <div className="card">
             <div className="card-header">
-                <h2 className="card-title">Threat Severity</h2>
+                <h2 className="card-title">Threat Analysis</h2>
             </div>
             <div className="pie-chart-container">
                 <div className="pie-chart">
-                    <Pie data={pieSeverityData} />
+                    <Pie data={pieSeverityData} options={pieOptions} />
                 </div>
-            <div className="pie-chart-container">
+                <div className="line-chart-container">
+                    <Line data={lineData} options={lineOptions} />
+                </div>
                 <div className="pie-chart">
                     <Pie data={pieMachineData} />
                 </div>
-            </div>
-                        
+            
             </div>
         </div>
     </>

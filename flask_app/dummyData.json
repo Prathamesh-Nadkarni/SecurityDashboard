@@ -14,7 +14,7 @@
             "name": "Alert2",
             "description": "Execution - SysInternals Use",
             "machine": "Machine 1",
-            "occurred_on": "2022-07-19 16:01:48.497418",
+            "occurred_on": "2022-07-23 16:01:48.497418",
             "severity": "Medium",
             "program": "sysmon.exe"
         },
@@ -23,7 +23,7 @@
             "name": "Alert3",
             "description": "Persistence - Regmod Run or Runonce Key Modification",
             "machine": "Machine 1",
-            "occurred_on": "2022-07-19 17:24:44.629059",
+            "occurred_on": "2022-07-22 17:24:44.629059",
             "severity": "Medium",
             "program": "plugin-container.exe"
         },
@@ -32,7 +32,7 @@
             "name": "Alert4",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 1",
-            "occurred_on": "2022-07-19 16:01:48.544218",
+            "occurred_on": "2022-07-23 16:01:48.544218",
             "severity": "Medium",
             "program": "svchost.exe"
         },
@@ -50,7 +50,7 @@
             "name": "Alert6",
             "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries",
             "machine": "Machine 2",
-            "occurred_on": "2022-07-19 19:34:36.893354",
+            "occurred_on": "2022-07-22 19:34:36.893354",
             "severity": "Medium",
             "program": "excel.exe"
         },
@@ -59,7 +59,7 @@
             "name": "Alert7",
             "description": "Persistence - Regmod Run or Runonce Key Modification",
             "machine": "Machine 2",
-            "occurred_on": "2022-07-19 19:46:57.579092",
+            "occurred_on": "2022-07-21 19:46:57.579092",
             "severity": "Medium",
             "program": "plugin-container.exe"
         },
@@ -68,7 +68,7 @@
             "name": "Alert8",
             "description": "Execution - SysInternals Use",
             "machine": "Machine 2",
-            "occurred_on": "2022-07-19 19:31:30.448410",
+            "occurred_on": "2022-07-21 19:31:30.448410",
             "severity": "Medium",
             "program": "sysmon.exe"
         },
@@ -77,7 +77,7 @@
             "name": "Alert9",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 2",
-            "occurred_on": "2022-07-19 19:31:00.138278",
+            "occurred_on": "2022-07-23 19:31:00.138278",
             "severity": "Medium",
             "program": "svchost.exe"
         },
@@ -95,7 +95,7 @@
             "name": "Alert11",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 3",
-            "occurred_on": "2022-07-19 20:08:34.383972",
+            "occurred_on": "2022-07-22 20:08:34.383972",
             "severity": "Medium",
             "program": "svchost.exe"
         },
@@ -131,8 +131,8 @@
             "name": "Alert15",
             "description": "Execution - SysInternals Use",
             "machine": "Machine 4",
-            "occurred_on": "2022-07-19 22:32:12.801620",
-            "severity": "Medium",
+            "occurred_on": "2022-07-24 22:32:12.801620",
+            "severity": "High",
             "program": "sysmon.exe"
         },
         {
@@ -176,7 +176,7 @@
             "name": "Alert20",
             "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries",
             "machine": "Machine 4",
-            "occurred_on": "2022-07-19 22:39:55.364566",
+            "occurred_on": "2022-07-21 22:39:55.364566",
             "severity": "Medium",
             "program": "excel.exe"
         },
@@ -185,7 +185,7 @@
             "name": "Alert21",
             "description": "Persistence - Office Application Startup - Word",
             "machine": "Machine 4",
-            "occurred_on": "2022-07-19 22:52:18.134623",
+            "occurred_on": "2022-07-21 22:52:18.134623",
             "severity": "High",
             "program": "excel.exe"
         },
@@ -194,7 +194,7 @@
             "name": "Alert22",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 4",
-            "occurred_on": "2022-07-19 22:33:51.429382",
+            "occurred_on": "2022-07-21 22:33:51.429382",
             "severity": "Medium",
             "program": "svchost.exe"
         },
@@ -203,7 +203,7 @@
             "name": "Alert23",
             "description": "Execution - SysInternals Use",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:16:03.533664",
+            "occurred_on": "2022-07-21 23:16:03.533664",
             "severity": "Low",
             "program": "sysmon.exe"
         },
@@ -212,7 +212,7 @@
             "name": "Alert24",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:34:43.607096",
+            "occurred_on": "2022-07-22 23:34:43.607096",
             "severity": "Low",
             "program": "svchost.exe"
         },
@@ -221,7 +221,7 @@
             "name": "Alert25",
             "description": "Privilege Escalation - Svchost Launching HTA (CVE 2017-0199)",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:27:58.204449",
+            "occurred_on": "2022-07-21 23:27:58.204449",
             "severity": "Medium",
             "program": "mshta.exe"
         },
@@ -239,7 +239,7 @@
             "name": "Alert27",
             "description": "Defense Evasion - MSHTA Launching Script Interpreters",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:39:33.667795",
+            "occurred_on": "2022-07-22 23:39:33.667795",
             "severity": "Medium",
             "program": "mshta.exe"
         },
@@ -329,7 +329,7 @@
             "name": "Alert37",
             "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:26:25.333501",
+            "occurred_on": "2022-07-24 23:26:25.333501",
             "severity": "Medium",
             "program": "winword.exe"
         },
@@ -338,7 +338,7 @@
             "name": "Alert38",
             "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:19:31.916855",
+            "occurred_on": "2022-07-25 23:19:31.916855",
             "severity": "Low",
             "program": "excel.exe"
         },
@@ -347,7 +347,7 @@
             "name": "Alert39",
             "description": "Defense Evasion - Powershell Executing Hidden - Encoded Commands",
             "machine": "Machine 5",
-            "occurred_on": "2022-07-19 23:39:35.360198",
+            "occurred_on": "2022-07-18 23:39:35.360198",
             "severity": "High",
             "program": "powershell.exe"
         },
@@ -365,7 +365,7 @@
             "name": "Alert41",
             "description": "Execution - SysInternals Use",
             "machine": "Machine 6",
-            "occurred_on": "2022-07-19 23:58:52.870803",
+            "occurred_on": "2022-07-24 23:58:52.870803",
             "severity": "Low",
             "program": "sysmon.exe"
         },
@@ -374,7 +374,7 @@
             "name": "Alert42",
             "description": "Initial Access - MS Office Applications Loading Suspicious Visual Basic Libraries",
             "machine": "Machine 6",
-            "occurred_on": "2022-07-19 23:58:52.251768",
+            "occurred_on": "2022-07-22 23:58:52.251768",
             "severity": "Medium",
             "program": "excel.exe"
         },
@@ -383,7 +383,7 @@
             "name": "Alert43",
             "description": "Persistence - Office Application Startup - normal.dotm",
             "machine": "Machine 6",
-            "occurred_on": "2022-07-20 00:10:04.081662",
+            "occurred_on": "2022-07-23 00:10:04.081662",
             "severity": "Medium",
             "program": "winword.exe"
         },
@@ -392,7 +392,7 @@
             "name": "Alert44",
             "description": "Credential Access - LLMNR/NBT-NS Poisoning - LLMNR Traffic Detected",
             "machine": "Machine 6",
-            "occurred_on": "2022-07-19 23:55:13.490944",
+            "occurred_on": "2022-07-21 23:55:13.490944",
             "severity": "Low",
             "program": "svchost.exe"
         },

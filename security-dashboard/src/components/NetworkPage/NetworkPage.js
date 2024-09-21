@@ -14,9 +14,9 @@ const NetworkPage = () => {
   const [clickedEdge, setClickedEdge] = useState(null);
   const [clickedNode, setClickedNode] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [menuVisible, setMenuVisible] = useState(false);  // State to track menu visibility
-  const [filterTransparent, setFilterTransparent] = useState(false); // State to track filter option
-  const [fileNameFilter, setFileNameFilter] = useState(''); // State to track file name filter
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [filterTransparent, setFilterTransparent] = useState(false);
+  const [fileNameFilter, setFileNameFilter] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +27,6 @@ const NetworkPage = () => {
     axios.get(`http://127.0.0.1:5000/api/network/${alertId}`)
       .then(response => {
         const { nodes, edges } = response.data;
-        
         setNodes(nodes);
         setEdges(edges);
         setLoading(false);
@@ -70,11 +69,11 @@ const NetworkPage = () => {
   };
 
   const toggleMenu = () => {
-    setMenuVisible(!menuVisible);  // Toggle menu visibility
+    setMenuVisible(prev => !prev);
   };
 
   const handleFilterToggle = () => {
-    setFilterTransparent(!filterTransparent);  // Toggle filter option
+    setFilterTransparent(!filterTransparent);
   };
 
   const getHighlightedItems = (items, searchQuery) => {
@@ -88,8 +87,13 @@ const NetworkPage = () => {
   };
 
   const formatFilePath = (filePath) => {
-    const parts = filePath.split('\\');
-    return parts[parts.length - 1]; // Return only the file name
+    if (typeof filePath === 'string') {
+      const parts = filePath.split('\\');
+      return parts[parts.length - 1]; // Return only the file name
+    } else {
+      console.error('filePath is not a string:', filePath);
+      return filePath; // Return as is or handle it as needed
+    }
   };
 
   const highlightedNodes = getHighlightedItems(nodes, searchQuery);
@@ -102,10 +106,38 @@ const NetworkPage = () => {
     return nodes.map(node => ({
       ...node,
       highlight: node.label.toLowerCase().includes(lowerCaseFilter),
+      label: node.label.toLowerCase().includes(lowerCaseFilter) ? 
+        <span style={{ backgroundColor: '#FFFF00' }}>{node.label}</span> : node.label, // Highlighting
     }));
   };
 
   const filteredNodes = filterNodesByFileName(highlightedNodes, fileNameFilter);
+
+  const calculatePositions = (nodes) => {
+    const nodePositions = {};
+    const rankSpacingX = 200;
+    const ySpacing = 100;
+    const nodesByRank = nodes.reduce((acc, node) => {
+      const rank = node.rank || 0;
+      if (!acc[rank]) acc[rank] = [];
+      acc[rank].push(node);
+      return acc;
+    }, {});
+
+    Object.keys(nodesByRank).forEach(rank => {
+      const nodesInRank = nodesByRank[rank];
+      nodesInRank.forEach((node, index) => {
+        nodePositions[node.id] = {
+          x: rank * rankSpacingX,
+          y: index * ySpacing - (nodesInRank.length * ySpacing) / 2,
+        };
+      });
+    });
+
+    return nodePositions;
+  };
+
+  const nodePositions = calculatePositions(filterTransparent ? nodes : filteredNodes);
 
   const options = {
     layout: { hierarchical: false },
@@ -132,58 +164,67 @@ const NetworkPage = () => {
   };
 
   const graphData = {
-    nodes: filteredNodes.map(node => {
-      let label = node.label;
-      let title = '';
-
-      if (node.type === 'file' && node.label !== 'comb-file') {
-        label = formatFilePath(node.label); // Only show file name
-        title = node.label; // Full path for hover information
-      }
-
-      return {
-        id: node.id,
-        label: label,
-        title: title,
-        x: node.x,
-        y: node.y,
-        shape: node.type === 'process' ? 'circle' :
-               node.type === 'socket' ? 'diamond' :
-               'box',
-        size: node.type === 'socket' ? 40 : 20,
-        font: { size: node.type === 'socket' ? 10 : 14, vadjust: node.type === 'socket' ? -50 : 0 },
-        color: {
-          background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)"),
-          border: "#2B7CE9",
-          highlight: { background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF"), border: "#2B7CE9" },
-        },
-        className: node.transparent && !node.highlight ? 'transparent' : '',
-      };
-    }),
-
-    edges: highlightedEdges.map(edge => ({
-      from: edge.source,
-      to: edge.target,
-      label: edge.label,
-      color: edge.highlighted ? '#FFFF00' :
-              edge.alname && edge.transparent && filterTransparent ? '#ff9999' :
-              edge.alname ? '#ff0000' :
-              edge.transparent && filterTransparent ? '#d3d3d3' :
-              '#000000',
-      id: `${edge.source}-${edge.target}`,
-      font: { size: 12, align: 'horizontal', background: 'white', strokeWidth: 0 },
-      className: edge.transparent && !edge.highlighted ? 'transparent' : '',
+    nodes: (filterTransparent ? nodes : filteredNodes).map(node => ({
+      ...node,
+      x: nodePositions[node.id]?.x || 0,
+      y: nodePositions[node.id]?.y || 0,
+      label: node.type === 'file' && node.label !== 'comb-file'
+        ? formatFilePath(node.label)
+        : node.label,
+      title: node.type === 'file' && node.label !== 'comb-file' ? node.label : '',
+      shape: node.type === 'process' ? 'circle' : (node.type === 'socket' ? 'diamond' : 'box'),
+      size: node.type === 'socket' ? 40 : 20,
+      font: { size: node.type === 'socket' ? 10 : 14, vadjust: node.type === 'socket' ? -50 : 0 },
+      color: {
+        background: node.transparent && filterTransparent ? (node.highlight ? "#FFFF00" : "rgba(151, 194, 252, 0.5)") : "rgb(151, 194, 252)",
+        border: "#2B7CE9",
+        highlight: { background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF"), border: "#2B7CE9" },
+      },
+      className: node.transparent && !node.highlight ? 'transparent' : '',
     })),
+
+    edges: highlightedEdges
+      .filter(edge => !(edge.transparent && filterTransparent))
+      .map(edge => ({
+        from: edge.source,
+        to: edge.target,
+        label: edge.label,
+        color: edge.highlighted ? '#f2cc0c' :
+               edge.alname ? '#ff0000' :
+               '#000000',
+        id: `${edge.source}-${edge.target}`,
+        font: { size: 12, align: 'horizontal', background: 'white', strokeWidth: 0 },
+        className: edge.transparent ? 'transparent' : '',
+      })),
   };
 
   return (
     <div className="network-container">
       <div className="floating-buttons">
-        <button className="floating-back-button" onClick={() => navigate(-1)}>Back</button>
-        <button className="floating-toggle-button" onClick={toggleMenu}>
-          {menuVisible ? "Close Menu" : "Menu"}
-        </button>
-      </div>
+  <button className="floating-back-button" onClick={() => navigate(-1)}>Back</button>
+  <div className="options-container">
+    <button className="floating-toggle-button" onClick={toggleMenu}>
+      {menuVisible ? "Close Menu" : "Menu"}
+    </button>
+    <div className={`search-bar ${menuVisible ? "visible" : "hidden"}`}>
+      <input
+        type="text"
+        placeholder="Search nodes..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+      <input
+        type="text"
+        placeholder="Filter by filename..."
+        value={fileNameFilter}
+        onChange={handleFileNameFilterChange}
+      />
+      <button onClick={handleFilterToggle}>
+        {filterTransparent ? "Show All" : "Show Filtered"}
+      </button>
+    </div>
+  </div>
+</div>
 
       <div id="network-visualization">
         <Graph
@@ -214,10 +255,10 @@ const NetworkPage = () => {
           <Rnd default={{ x: 50, y: 50, width: 250, height: 120 }} minWidth={250} minHeight={120}>
             <div className="node-popup">
               <div>
-                <strong>Node Name:</strong> {clickedNode.label}
+                <strong>Node Label:</strong> {clickedNode.label}
               </div>
               <div>
-                <strong>Node Rank:</strong> {clickedNode.rank || 'N/A'}
+                <strong>Node Type:</strong> {clickedNode.type}
               </div>
               <button onClick={handleClosePopup}>Close</button>
             </div>
@@ -225,33 +266,12 @@ const NetworkPage = () => {
         )}
       </div>
 
-      <div className={`sliding-menu ${menuVisible ? 'visible' : ''}`}>
-        <div className="filter-container">
-          <div className="filter-option">
-            <label>
-              <input
-                type="checkbox"
-                checked={filterTransparent}
-                onChange={handleFilterToggle}
-              />
-              Show Transparent Edges
-            </label>
-          </div>
-          <div className="filter-option">
-            <label>
-              File Name Filter:
-              <input
-                type="text"
-                value={fileNameFilter}
-                onChange={handleFileNameFilterChange}
-                placeholder="Enter file name"
-              />
-            </label>
-          </div>
-        </div>
-      </div>
+
+
+      {loading && <div className="loading-spinner">Loading...</div>}
     </div>
   );
 };
 
 export default NetworkPage;
+  
