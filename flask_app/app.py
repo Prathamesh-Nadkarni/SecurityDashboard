@@ -19,27 +19,18 @@ app = Flask(__name__)
 
 demo_decryption_key = b"mysecretkey12345"
 
-demo_decryption_key = b"mysecretkey12345"
-
 def decrypt(encrypted_password):
     global demo_decryption_key
-
-    # Decode the base64-encoded password
     encrypted_data = base64.b64decode(encrypted_password)
 
-    # Check if the encrypted data length is at least 16 bytes for IV
     if len(encrypted_data) < 16:
         print("Invalid encrypted data length.")
         return None
 
-    # Extract the IV and the encrypted data
     iv = encrypted_data[:16]
     encrypted_data = encrypted_data[16:]
 
-    print("IV:", iv)
-    print("Encrypted data length:", len(encrypted_data))
 
-    # Create the AES cipher object
     obj = AES.new(demo_decryption_key, AES.MODE_CBC, iv)
 
     try:
@@ -47,7 +38,8 @@ def decrypt(encrypted_password):
         return decrypted_data.decode('utf-8')
     except ValueError as e:
         print("Decryption error:", e)
-        return None
+        return None  # Handle the error as needed
+
 
 CORS(app)
 
@@ -154,12 +146,10 @@ def update_user(username):
 @app.route('/api/login', methods=['POST'])
 def login():
     if request.is_json:
-        print(request)
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
-        print("Password: ", data['password'])
-        decrypted_password = decrypt(data['password'])  # Adjust to call decrypt correctly
-        print("Decrypted: ", decrypted_password)
+        decrypted_password = decrypt(data['password'])
+        #print("User password", user.password)
         if user and check_password_hash(user.password, decrypted_password):
             response = jsonify({'success': True, 'username': data['username']})
             response.headers.add('Access-Control-Allow-Origin', '*')
@@ -176,7 +166,6 @@ def login():
 def create_user():
     if request.is_json:
         data = request.get_json()
-        # TODO: put password hashing on front end, we should receive password as a hash
         hashed_password = generate_password_hash(data['password'], method='scrypt')
         default_picture = os.path.join(app.config['UPLOAD_FOLDER'], 'default_profile_picture.jpg')
         new_user = User(

@@ -40,6 +40,7 @@ const encryptPassword = (password, key) => {
   return iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
 };
 
+
 const LoginPage = ({ setAuth }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -68,8 +69,8 @@ const LoginPage = ({ setAuth }) => {
           }),
         });
       } else {
-        const key = 'mysecretkey123456';
-        const encryptedPassword = encryptPassword('your_password', key); // Encrypt the password here
+        const key = 'mysecretkey12345';
+        const encryptedPassword = encryptPassword(password, key); // Encrypt the password here
         response = await fetch('http://127.0.0.1:5000/api/login', {
           method: 'POST',
           headers: {
