@@ -101,15 +101,14 @@ const NetworkPage = () => {
 
   const filterNodesByFileName = (nodes, fileNameFilter) => {
     if (!fileNameFilter) return nodes;
-
+  
     const lowerCaseFilter = fileNameFilter.toLowerCase();
     return nodes.map(node => ({
       ...node,
-      highlight: node.label.toLowerCase().includes(lowerCaseFilter),
-      label: node.label.toLowerCase().includes(lowerCaseFilter) ? 
-        <span style={{ backgroundColor: '#FFFF00' }}>{node.label}</span> : node.label, // Highlighting
+      highlight: node.label.toLowerCase().includes(lowerCaseFilter), // Just track highlight
     }));
   };
+  
 
   const filteredNodes = filterNodesByFileName(highlightedNodes, fileNameFilter);
 
@@ -163,7 +162,7 @@ const NetworkPage = () => {
     },
   };
 
-  const graphData = {
+  const graphData = { 
     nodes: (filterTransparent ? nodes : filteredNodes).map(node => ({
       ...node,
       x: nodePositions[node.id]?.x || 0,
@@ -176,24 +175,27 @@ const NetworkPage = () => {
       size: node.type === 'socket' ? 40 : 20,
       font: { size: node.type === 'socket' ? 10 : 14, vadjust: node.type === 'socket' ? -50 : 0 },
       color: {
-        background: node.transparent && filterTransparent ? (node.highlight ? "#FFFF00" : "rgba(151, 194, 252, 0.5)") : "rgb(151, 194, 252)",
+        background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(151, 194, 252, 0.5)" : "rgb(151, 194, 252)"), // Use highlight here
         border: "#2B7CE9",
-        highlight: { background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF"), border: "#2B7CE9" },
+        highlight: {
+          background: node.highlight ? "#FFFF00" : (node.transparent && filterTransparent ? "rgba(210, 229, 255, 0.1)" : "#D2E5FF"),
+          border: "#2B7CE9",
+        },
       },
       className: node.transparent && !node.highlight ? 'transparent' : '',
-    })),
-
+    })),  
     edges: highlightedEdges
       .filter(edge => !(edge.transparent && filterTransparent))
       .map(edge => ({
         from: edge.source,
         to: edge.target,
         label: edge.label,
-        color: edge.highlighted ? '#f2cc0c' :
-               edge.alname ? '#ff0000' :
-               '#000000',
+        color: edge.highlighted ? { color: '#800080'} :
+               edge.alname ? { color: '#ff0000'} :
+               { color: '#000000'},
+        width: edge.highlighted ? 2 : 1,
         id: `${edge.source}-${edge.target}`,
-        font: { size: 12, align: 'horizontal', background: 'white', strokeWidth: 0 },
+        font: { align: 'horizontal', background: 'white', strokeWidth: 0, size: edge.highlighted || edge.alname ? 16 : 12},
         className: edge.transparent ? 'transparent' : '',
       })),
   };
