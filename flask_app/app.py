@@ -262,6 +262,12 @@ def get_network_data(alert_id):
 
 def delete_alert(alert_id):
     global dummy_network_data
+    alert = Alert.query.get(alert_id)
+    if alert:
+        db.session.delete(alert)
+        db.session.commit()
+        socketio.emit('delete_alert', {'id': alert_id})
+        return jsonify({'message': f'Alert {alert_id} has been successfully deleted.'}), 200
     if str(alert_id) in dummy_network_data:
         del dummy_network_data[str(alert_id)]
         return {"message": f"Alert {alert_id} has been successfully deleted."}

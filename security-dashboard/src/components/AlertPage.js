@@ -22,7 +22,7 @@ const AlertPage = () => {
   const handleResolveAlert = () => {
     const confirmed = window.confirm('Are you sure you want to mark this alert as resolved and delete it?');
     if (confirmed) {
-      fetch(`http://127.0.0.1:5000/alert/${alertId}`, {
+      fetch(`http://127.0.0.1:5000/api/network/${alertId}`, {
         method: 'DELETE',
       })
         .then(response => {
@@ -30,7 +30,7 @@ const AlertPage = () => {
             throw new Error('Failed to delete the alert');
           }
           alert('Alert has been resolved and deleted.');
-          navigate('/login'); // Redirect to the dashboard after deletion
+          navigate('/login');
         })
         .catch(error => console.error('There was a problem with the delete operation:', error));
     }
