@@ -26,8 +26,6 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
                 )}
             </div>
 
-
-
             {/* Clear Filters Button */}
         </div>
         <div className="filter-container">
@@ -36,9 +34,6 @@ export default function Filter({ filters, handleFilterChange, handleSeverityChan
             </button>
             <button className="toggle-chart-btn" onClick={togglePieChart}>
                 {showPieChart ? 'Hide Graphs' : 'Show Graphs'}
-            </button>
-            <button className="toggle-chart-btn" onClick={addAlerts}>
-                Add New Alerts
             </button>
         </div>
     </>
