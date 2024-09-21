@@ -41,13 +41,16 @@ const Dashboard = ({ setAuth }) => {
         console.log('Socket connected:', socket.id);
     });
 
-    socket.on('new_alert', (alert) => {
       socket.on('new_alert', (alert) => {
         setAlerts((prevAlerts) => [...prevAlerts, alert]);
         setNewAlerts((prevNewAlerts) => [...prevNewAlerts, alert]);
         setNotificationList((prevNotifications) => [...prevNotifications, alert]);
     });
-    });
+
+    socket.on('delete_alert', (alert) => {
+      fetchAlerts();
+  });
+    
 
     return () => {
         socket.disconnect();
