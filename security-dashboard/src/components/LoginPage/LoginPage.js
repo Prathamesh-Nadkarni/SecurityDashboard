@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import { encrypt } from '../../utils/crypt';
 import CryptoJS from 'crypto-js';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import Pic1 from '../../assets/Pic1.png';
+import Pic2 from '../../assets/Pic2.png';
+import DoubleArrowSharpIcon from '@mui/icons-material/DoubleArrowSharp';
 
 const authenticateYubikey = async (username) => {
   const publicKeyOptions = {
@@ -96,51 +101,97 @@ const LoginPage = ({ setAuth }) => {
   };
 
   return (
-    <div className="login-page">
-      <h1 className="title">Login</h1>
-      <form onSubmit={handleLogin}>
+    
+    <div className="page-container">
+  <div className="logo-container">
+    <img
+      src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png"
+      className="logo"
+      alt="STS Labs Logo"
+    />
+    <h2 className="sts-text">STS Labs</h2>
+  </div>
+
+  <div className="login-page">
+    <h1 className="title">Login</h1>
+    <form onSubmit={handleLogin} className="login-form">
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+
+      {!useYubikey && (
         <div className="input-group">
           <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        {!useYubikey && (
-          <div className="input-group">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="password-toggle"
+          {showPassword ? (
+            <VisibilityOffIcon
+              className="visibility-icon"
               onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          </div>
-        )}
-        {error && <p className="error">{error}</p>}
-        <div className="yubikey-option">
-          <label>
-            <input
-              type="checkbox"
-              checked={useYubikey}
-              onChange={() => setUseYubikey(!useYubikey)}
             />
-            Use Yubikey
-          </label>
+          ) : (
+            <VisibilityIcon
+              className="visibility-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          )}
         </div>
-        <button type="submit" className="login-button">Login</button>
-      </form>
-      <p>Don't have an account? <a href="/create-user">Create one</a></p>
+      )}
+
+      {error && <p className="error">{error}</p>}
+      <div className="yubikey-option">
+        <label>
+          <input
+            type="checkbox"
+            checked={useYubikey}
+            onChange={() => setUseYubikey(!useYubikey)}
+          />
+          Use Yubikey
+        </label>
+      </div>
+      <button type="submit" className="login-button">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/create-user">Create one</a></p>
+    
+    {/* Website Functionalities Section */}
+  </div>
+{/* 
+  <div className="functionality-description">
+    <h3>Website Functionalities</h3>
+    <p>
+      Welcome to our website! This platform offers a comprehensive analysis of the threat landscape on your machines, equipping you with an intuitive alerts dashboard that notifies you immediately when a threat is detected. In addition to real-time alerts, you can explore detailed network graphs that facilitate in-depth analysis of threats, enabling users to debug issues and assess their severity.
+    </p>
+
+    <div className="images-section">
+      <div className="image-container">
+        <img src={Pic1} alt="Pic 1" className="image" />
+        <p className="image-caption">Analyze</p>
+      </div>
+      <span className="arrow">
+        <DoubleArrowSharpIcon fontSize="large" style={{ fontSize: '5rem' }} />
+      </span>
+      <div className="image-container">
+        <img src={Pic2} alt="Pic 2" className="image" />
+        <p className="image-caption">Resolve</p>
+      </div>
     </div>
+    <p>
+      With features like instant filtering and sorting, navigating any node path in a graph becomes effortless. To enhance your security, the website supports two-factor authentication, ensuring that your data remains protected. Join us today and take the first step toward securing your machines!
+    </p>
+  </div>*/}
+</div>
+
+
   );
 };
 

@@ -4,7 +4,9 @@
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 100px; /* Adjust the position to avoid overlap with logo */
 }
 
 .title {
@@ -29,7 +31,6 @@
   cursor: pointer;
   color: #666;
 }
-
 
 .password-toggle {
   position: absolute;
@@ -72,7 +73,6 @@
   color: red;
   font-size: 0.875rem;
 }
-
 
 .password-strength {
   display: flex;
@@ -119,4 +119,29 @@
   color: #333;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+/* New logo container styles */
+.page-container {
+  position: relative;
+  min-height: 100vh; /* Full page height */
+}
+
+.logo-container {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  left: 20px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 50px; /* Adjust logo size */
+  margin-right: 10px;
+}
+
+.sts-text {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
 }

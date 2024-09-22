@@ -179,98 +179,119 @@ const CreateUserPage = () => {
   };
 
   return (
-    <div className="create-user-page">
-      <h1 className="title">Create User</h1>
-      <form onSubmit={handleCreateUser}>
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+    <div className="page-container">
+  <div className="logo-container">
+    <img
+      src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png"
+      className="logo"
+      alt="STS Labs Logo"
+    />
+    <h2 className="sts-text">STS Labs</h2>
+  </div>
+
+  <div className="create-user-page">
+    <h1 className="title">Create User</h1>
+    <form onSubmit={handleCreateUser}>
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+      <div className="input-group">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          value={password}
+          onChange={handlePasswordChange}
+          required
+        />
+        {showPassword ? (
+          <VisibilityOffIcon
+            className="visibility-icon"
+            onClick={() => setShowPassword(!showPassword)}
           />
-        </div>
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+        ) : (
+          <VisibilityIcon
+            className="visibility-icon"
+            onClick={() => setShowPassword(!showPassword)}
           />
+        )}
+      </div>
+      {passwordError && <p className="error">{passwordError}</p>}
+      {password && (
+        <div className="password-strength">
+          <label>Password Strength:</label>
+          <progress value={passwordStrength} max="5"></progress>
+          <span>
+            {passwordStrength <= 2
+              ? "Weak"
+              : passwordStrength === 3
+              ? "Medium"
+              : "Strong"}
+          </span>
         </div>
-        <div className="input-group">
+      )}
+      <div className="input-group">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          onBlur={handleConfirmPasswordBlur}
+          required
+        />
+      </div>
+      {passwordMismatchError && <p className="error">{passwordMismatchError}</p>}
+      <div className="input-group">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={handleEmailBlur}
+          required
+        />
+      </div>
+      {emailError && <p className="error">{emailError}</p>}
+      <div className="yubikey-registration">
+        <label>
           <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
+            type="checkbox"
+            checked={registerYubikey}
+            onChange={() => setRegisterYubikey(!registerYubikey)}
           />
-          {showPassword ? (
-            <VisibilityOffIcon className="visibility-icon" onClick={() => setShowPassword(!showPassword)} />
-          ) : (
-            <VisibilityIcon className="visibility-icon" onClick={() => setShowPassword(!showPassword)} />
-          )}
-        </div>
-        {passwordError && <p className="error">{passwordError}</p>}
-        {password && ( // Conditionally render the password strength meter
-          <div className="password-strength">
-            <label>Password Strength:</label>
-            <progress value={passwordStrength} max="5"></progress>
-            <span>
-              {passwordStrength <= 2 ? 'Weak' : passwordStrength === 3 ? 'Medium' : 'Strong'}
-            </span>
+          Register for 2 Factor Authentication
+        </label>
+        {registerYubikey && (
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Yubikey ID"
+              value={yubikey}
+              onChange={(e) => setYubikey(e.target.value)}
+            />
           </div>
         )}
-        <div className="input-group">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            onBlur={handleConfirmPasswordBlur}
-            required
-          />
-        </div>
-        {passwordMismatchError && <p className="error">{passwordMismatchError}</p>}
-        <div className="input-group">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={handleEmailBlur}
-            required
-          />
-        </div>
-        {emailError && <p className="error">{emailError}</p>}
-        <div className="yubikey-registration">
-          <label>
-          <input
-              type="checkbox"
-              checked={registerYubikey}
-              onChange={() => setRegisterYubikey(!registerYubikey)}
-            />
-            Register for 2 Factor Authentication
-          </label>
-          {registerYubikey && (
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="Yubikey ID"
-                value={yubikey}
-                onChange={(e) => setYubikey(e.target.value)}
-              />
-            </div>
-          )}
-        </div>
+      </div>
 
-        {error && <p className="error">{error}</p>}
-        <button type="submit" className="create-button">Create</button>
-      </form>
-    </div>
+      {error && <p className="error">{error}</p>}
+      <button type="submit" className="create-button">Create</button>
+    </form>
+  </div>
+</div>
   );
 };
 
