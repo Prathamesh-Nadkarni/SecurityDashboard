@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateUserPage.css';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 // Validation functions
 const validateUsername = (username) => /^[a-zA-Z0-9_]{3,30}$/.test(username);
 const validateName = (name) => /^[a-zA-Z\s]{1,100}$/.test(name);
 const validatePassword = (password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+
+const getPasswordStrength = (password) => {
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[a-z]/.test(password)) score++;
+  if (/\d/.test(password)) score++;
+  if (/[@$!%*?&]/.test(password)) score++;
+  return score;
+};
 
 const sanitizeInput = (input) => input.replace(/<[^>]*>/g, '');
 
@@ -18,8 +30,10 @@ const CreateUserPage = () => {
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordMismatchError, setPasswordMismatchError] = useState('');
   const [yubikey, setYubikey] = useState('');
   const [registerYubikey, setRegisterYubikey] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0); // State for password strength
   const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
   const navigate = useNavigate();
 
@@ -35,6 +49,7 @@ const CreateUserPage = () => {
     setError('');
     setEmailError('');
     setPasswordError('');
+    setPasswordMismatchError('');
 
     // Sanitize input
     const sanitizedUsername = sanitizeInput(username);
@@ -51,7 +66,7 @@ const CreateUserPage = () => {
     }
 
     if (!validatePassword(password)) {
-      setPasswordError('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character');
+      setPasswordMismatchError('Password must be at least 8 characters long and include uppercase, lowercase, number, and special character');
       return;
     }
 
@@ -64,6 +79,7 @@ const CreateUserPage = () => {
       setError('Invalid name format');
       return;
     }
+    
 
     const userData = {
       username: sanitizedUsername,
@@ -103,6 +119,29 @@ const CreateUserPage = () => {
       .catch(() => {
         setError('Failed to create user');
       });
+  };
+
+
+  const handleEmailBlur = () => {
+    if (!validateEmail(email)) {
+      setEmailError('Invalid email format');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordStrength(getPasswordStrength(newPassword)); // Update password strength
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    if (password !== confirmPassword) {
+      setPasswordMismatchError('Passwords do not match');
+    } else {
+      setPasswordMismatchError('');
+    }
   };
 
   const registerYubikeyCredential = async () => {
@@ -166,46 +205,55 @@ const CreateUserPage = () => {
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
-          <button
-            type="button"
-            className="password-toggle"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
+          {showPassword ? (
+            <VisibilityOffIcon className="visibility-icon" onClick={() => setShowPassword(!showPassword)} />
+          ) : (
+            <VisibilityIcon className="visibility-icon" onClick={() => setShowPassword(!showPassword)} />
+          )}
         </div>
+        {passwordError && <p className="error">{passwordError}</p>}
+        {password && ( // Conditionally render the password strength meter
+          <div className="password-strength">
+            <label>Password Strength:</label>
+            <progress value={passwordStrength} max="5"></progress>
+            <span>
+              {passwordStrength <= 2 ? 'Weak' : passwordStrength === 3 ? 'Medium' : 'Strong'}
+            </span>
+          </div>
+        )}
         <div className="input-group">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onBlur={handleConfirmPasswordBlur}
             required
           />
         </div>
-        {passwordError && <p className="error">{passwordError}</p>}
+        {passwordMismatchError && <p className="error">{passwordMismatchError}</p>}
         <div className="input-group">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={handleEmailBlur}
             required
           />
         </div>
         {emailError && <p className="error">{emailError}</p>}
-
         <div className="yubikey-registration">
           <label>
-            <input
+          <input
               type="checkbox"
               checked={registerYubikey}
               onChange={() => setRegisterYubikey(!registerYubikey)}
             />
-            Register Yubikey
+            Register for 2 Factor Authentication
           </label>
           {registerYubikey && (
             <div className="input-group">
