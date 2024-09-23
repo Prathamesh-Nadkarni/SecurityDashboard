@@ -130,7 +130,7 @@ function TopBar(props) {
             </List>
             <Divider />
             <List>
-                {['Upload Alerts', 'Contact'].map((text, index) => (
+                {[...(roleName === 'admin'? roleName === 'edit' ? 'Upload Alerts' : [] : []) , 'Contact'].map((text, index) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={() => handleSecondDrawerClick(index)} rel="noopener noreferrer">
                             <ListItemIcon>
