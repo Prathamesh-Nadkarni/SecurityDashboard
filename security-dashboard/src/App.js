@@ -8,6 +8,7 @@ import NetworkPage from './components/NetworkPage/NetworkPage';
 import LoginPage from './components/LoginPage/LoginPage';
 import CreateUserPage from './components/CreateUserPage/CreateUserPage';
 import Profile from './components/Profile/Profile'
+import UserTable from './components/Users/Users';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -37,13 +38,15 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/login" element={auth ? <Navigate to="/" /> : <LoginPage setAuth={setAuth} />} />
-        <Route path="/create-user" element={<CreateUserPage />} />
-        <Route path="/upload" element={auth ? <UploadPage /> : <Navigate to="/login" />} />
-        <Route path="/profile" element={auth ? <Profile /> : <Navigate to="/login" />} />
-        <Route path="/processing" element={auth ? <ProcessingPage /> : <Navigate to="/login" />} />
-        <Route path="/alert/:alertId" element={auth ? <AlertPage /> : <Navigate to="/login" />} />
-        <Route path="/network/:alertId" element={auth ? <NetworkPage /> : <Navigate to="/login" />} />
+        <Route path="/create-user" element={<CreateUserPage setAuth={setAuth}/>} />
+        <Route path="/upload" element={auth ? <UploadPage setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="/profile" element={auth ? <Profile setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="/processing" element={auth ? <ProcessingPage setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="/users" element={auth ? <UserTable setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="/alert/:alertId" element={auth ? <AlertPage setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="/network/:alertId" element={auth ? <NetworkPage setAuth={setAuth}/> : <Navigate to="/login" />} />
         <Route path="/" element={auth ? <Dashboard setAuth={setAuth}/> : <Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );

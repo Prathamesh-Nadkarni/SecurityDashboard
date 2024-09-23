@@ -1,0 +1,77 @@
+/* UserTable.css */
+
+.table-container {
+    margin: 80px 20px; /* Set top margin and small side margins */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    width: calc(100% - 40px); /* Full width minus side margins */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px; /* Rounded corners for the table */
+    overflow: hidden; /* Ensures the rounded corners are respected */
+}
+
+.table th, .table td {
+    padding: 15px 20px; /* Increased padding for larger cells */
+    text-align: left;
+}
+
+.table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #007bff; /* Added a border for a cleaner look */
+}
+
+.table tr {
+    transition: background-color 0.2s;
+}
+
+.table tr:hover {
+    background-color: #e9ecef; /* Slightly different hover color for better contrast */
+}
+
+.select-role {
+    width: 40%;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold; /* Bold text for buttons */
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.submit-button:focus {
+    outline: none;
+}
+
+.submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .table th, .table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .submit-button {
+        width: 100%; /* Full width buttons on smaller screens */
+    }
+}

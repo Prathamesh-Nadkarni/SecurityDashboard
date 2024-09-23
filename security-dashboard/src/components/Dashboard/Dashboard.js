@@ -6,6 +6,7 @@ import Graph from './Graph/Graph';
 import Filter from './Filters/Filter';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
+import { setHeaders } from '../../utils/headers';
 
 
 const Dashboard = ({ setAuth }) => {
@@ -36,7 +37,6 @@ const Dashboard = ({ setAuth }) => {
 
   useEffect(() => {
     const socket = io('http://localhost:5000');
-
     socket.on('connect', () => {
         console.log('Socket connected:', socket.id);
     });
@@ -68,7 +68,12 @@ const Dashboard = ({ setAuth }) => {
 
   const fetchAlerts = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/alert');
+      const response = await fetch('http://127.0.0.1:5000/api/alert',{
+        method: 'GET',
+        headers: {
+          ...setHeaders()
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch alerts');
       }

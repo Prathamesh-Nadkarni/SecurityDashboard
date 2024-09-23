@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import TopBar from './Dashboard/TopBar/TopBar';
+import { setHeaders, getRole } from '../utils/headers';
 
-const AlertPage = () => {
+const AlertPage = (setAuth) => {
   const { alertId } = useParams();
   const navigate = useNavigate();
   const [alertData, setAlertData] = useState(null);
+  const roleName = getRole();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/alert/${alertId}`)
+    fetch(`http://127.0.0.1:5000/alert/${alertId}`, {
+      method: 'GET',
+      headers: {
+        ...setHeaders()
+      }
+    })
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        
         return response.json();
       })
       .then(data => setAlertData(data))
@@ -20,10 +28,13 @@ const AlertPage = () => {
   }, [alertId]);
 
   const handleResolveAlert = () => {
-    const confirmed = window.confirm('Are you sure you want to mark this alert as resolved and delete it?');
+    const confirmed = window.confirm('Are you sure you want to mark this alert as resolved.This will delete the alert and it\'s data?');
     if (confirmed) {
       fetch(`http://127.0.0.1:5000/api/network/${alertId}`, {
         method: 'DELETE',
+        headers:{
+          ...setHeaders()
+        }
       })
         .then(response => {
           if (!response.ok) {
@@ -39,7 +50,7 @@ const AlertPage = () => {
   if (!alertData) return <div>Loading...</div>;
 
   return (
-    <TopBar>
+    <TopBar >
       <div className="p-10">
         <button
           className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
@@ -93,12 +104,14 @@ const AlertPage = () => {
         </table>
 
         {/* Red Resolved Button */}
+        {(roleName === 'admin' || roleName === 'edit') && (
         <button
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
           onClick={handleResolveAlert}
         >
-          Resolved
+          Resolve
         </button>
+      )}
       </div>
     </TopBar>
   );

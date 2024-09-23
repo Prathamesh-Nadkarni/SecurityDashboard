@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import TopBar from '../Dashboard/TopBar/TopBar';
+import { setHeaders } from '../../utils/headers';
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({ name: 'Unknown', email: 'Unknown', username: 'Unknown', picture: '' });
@@ -17,7 +18,12 @@ const Profile = () => {
   const fetchUserInfo = async () => {
     try {
       const username = localStorage.getItem('username');
-      const response = await fetch(`http://127.0.0.1:5000/api/user/${username}`);
+      const response = await fetch(`http://127.0.0.1:5000/api/user/${username}`,{
+        method: 'GET',
+        headers: {
+          ...setHeaders()
+        }
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch user info');
       }

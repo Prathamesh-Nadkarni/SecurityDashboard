@@ -13,6 +13,8 @@ import os
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 import base64
+from rbac import requires_roles
+from jwtGenerator import encode_auth_token, decode_auth_token
 
 
 app = Flask(__name__)
@@ -76,6 +78,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     picture = db.Column(db.String(100))
+    role = db.Column(db.String(50), nullable=False, default='view')
 
 
 class File(db.Model):
@@ -87,6 +90,18 @@ class File(db.Model):
 
 with app.app_context():
     db.create_all()
+
+def add_root_user():
+    hashed_password = generate_password_hash('STSL@bs123', method='scrypt')
+    new_user = User(
+        username='admin',
+        password=hashed_password,
+        name='Admin',
+        email='sts@sts.com',
+        role='admin'
+    )
+    db.session.add(new_user)
+    db.session.commit()
 
 
 # Function to add dummy data
@@ -120,7 +135,7 @@ def add_dummy_data():
 def get_user(username):
     user = User.query.filter_by(username=username).first()  # For simplicity, get the first user
     if user:
-        return jsonify({'user': {'username': user.username, 'name': user.name, 'password':user.password, 'email': user.email, 'picture': user.picture}})
+        return jsonify({'user': {'username': user.username, 'name': user.name, 'password':user.password, 'email': user.email, 'picture': user.picture, 'role': user.role}})
     return jsonify({'user': None})
 
 
@@ -132,6 +147,7 @@ def update_user(username):
         user.name = request.form['name']
         user.password = request.form['password']
         user.email = request.form['email']
+        user.role = request.form['role']
         if 'picture' in request.files:
             picture = request.files['picture']
             filename = secure_filename(picture.filename)
@@ -139,7 +155,19 @@ def update_user(username):
             picture.save(picture_path)
             user.picture = picture_path
         db.session.commit()
-        return jsonify({'user': {'username': user.username, 'name': user.name, 'password':user.password, 'email': user.email, 'picture': user.picture}})
+        return jsonify({'user': {'username': user.username, 'name': user.name, 'password':user.password, 'email': user.email, 'picture': user.picture, 'role': user.role}})
+    return jsonify({'error': 'User not found'}), 404
+
+
+@app.route('/api/user/role/<string:username>', methods=['PUT'])
+def update_userrole(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        data = request.get_json()
+        role = data.get('role')
+        user.role = role
+        db.session.commit()
+        return jsonify({'user': {'username': user.username, 'role': user.role}})
     return jsonify({'error': 'User not found'}), 404
 
 
@@ -148,18 +176,28 @@ def login():
     if request.is_json:
         data = request.get_json()
         user = User.query.filter_by(username=data['username']).first()
-        decrypted_password = decrypt(data['password'])
-        #print("User password", user.password)
+        if request.headers.get('X-Requested-From') == 'React':
+            decrypted_password = decrypt(data['password'])
+        else:
+            decrypted_password = data['password']
+        
         if user and check_password_hash(user.password, decrypted_password):
-            response = jsonify({'success': True, 'username': data['username']})
+            token = encode_auth_token(user.username, user.role)
+            
+            response = jsonify({
+                'success': True,
+                'username': data['username'],
+                'token': token 
+            })
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response
         
         response = jsonify({'success': False, 'error': 'Invalid credentials'}), 401
         response[0].headers.add('Access-Control-Allow-Origin', '*')
         return response
-    response.headers.add('Access-Control-Allow-Origin', '*')
+
     response = jsonify({'success': False, 'error': 'Invalid JSON data'}), 400
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response 
 
 @app.route('/api/create-user', methods=['POST'])
@@ -173,7 +211,7 @@ def create_user():
             password=hashed_password,
             email=data['email'],
             name=data['name'],
-            picture=default_picture  # Set the default picture path
+            picture=default_picture
         )
         db.session.add(new_user)
         db.session.commit()
@@ -181,7 +219,26 @@ def create_user():
     return jsonify({'success': False, 'error': 'Invalid JSON data'}), 400
 
 
+@app.route('/api/users', methods=['GET'])
+@requires_roles('admin')
+def get_users():
+    users = User.query.all();
+    user_list = []
+    
+    for user in users:
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'name': user.name,
+            'email': user.email,
+            'role': user.role
+        }
+        user_list.append(user_data)
+    
+    return jsonify(user_list)
+
 @app.route('/api/alert', methods=['GET'])
+@requires_roles('admin', 'view', 'edit')
 def get_alerts():
     global uploadCount
     try:
@@ -199,6 +256,7 @@ def get_alerts():
         return response  
 
 @app.route('/alert/<int:alert_id>', methods=['GET'])
+@requires_roles('admin', 'view', 'edit')
 def get_alert(alert_id):
     try:
         alert = Alert.query.get(alert_id)
@@ -220,6 +278,7 @@ def get_alert(alert_id):
 
 
 @app.route('/api/add-alert', methods=['POST'])
+@requires_roles('admin', 'edit')
 def add_alert():
     try:
         data = request.json
@@ -276,6 +335,7 @@ def delete_alert(alert_id):
 
 
 @app.route('/api/network/<int:alert_id>', methods=['GET'])
+@requires_roles('admin', 'view', 'edit')
 def network(alert_id):
     try:
         data = get_network_data(alert_id)
@@ -284,6 +344,7 @@ def network(alert_id):
         return jsonify({'error': str(e)}), 400
 
 @app.route('/api/network/<int:alert_id>', methods=['DELETE'])
+@requires_roles('admin', 'edit')
 def delete_network(alert_id):
     try:
         data = delete_alert(alert_id)
@@ -294,6 +355,7 @@ def delete_network(alert_id):
 
 # Route for fetching file statuses
 @app.route('/api/files', methods=['GET'])
+@requires_roles('admin', 'edit')
 def get_file_statuses():
     files = File.query.all()
     file_data = [{'filename': file.filename, 'status': file.status} for file in files]
@@ -310,4 +372,5 @@ if __name__ == '__main__':
 
         # Add dummy data
         add_dummy_data()
+        add_root_user()
     app.run(debug=True)    

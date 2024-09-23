@@ -9,8 +9,10 @@ import Drawer from '@mui/material/Drawer';
 import { GridArrowUpwardIcon } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PeopleAltSharpIcon from '@mui/icons-material/PeopleAltSharp';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import List from '@mui/material/List';
+import { useLocation } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
@@ -21,30 +23,35 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import LogoutIcon from '@mui/icons-material/Logout';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import UploadPage from '../../UploadPage/UploadPage';
+import { getRole, getUsername } from '../../../utils/headers';
 
 const drawerWidth = 240;
 
 function TopBar(props) {
-    const { alerts = [], setAlerts, window: prevWindow, setAuth } = props; // Set default value for alerts
+    const { alerts = [], setAlerts, window: prevWindow, setAuth } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [drawerW, setDrawerW] = useState(0);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [notificationList, setNotificationList] = useState(alerts);
+    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
-
+    const roleName = getRole();
+    const username = getUsername();
+    const location = useLocation();
     useEffect(() => {
-        setNotificationList(alerts); // This will update the notification list whenever alerts changes
+        setNotificationList(alerts);
+        const authStatus = localStorage.getItem('auth') === 'true';
     }, [alerts]);
 
     const clearAlert = (index) => {
         setNotificationList((prevNotifications) => prevNotifications.filter((_, i) => i !== index));
     };
-
 
     const clearAllAlerts = () => {
         setNotificationList([]);
@@ -70,7 +77,9 @@ function TopBar(props) {
     const handleLogout = () => {
         setAuth(false);
         localStorage.setItem('auth', 'false');
-        navigate('/login', );
+        if (location.pathname !== '/login') {
+            navigate('/login',  { replace: true });
+        }
     };
 
     const handleSecondDrawerClick = (index) => {
@@ -80,10 +89,23 @@ function TopBar(props) {
         } else {
             window.location.replace('https://sts.cs.illinois.edu/');
         }
-    }
+    };
 
     const handleNotificationsClick = () => {
         setNotificationsOpen((prev) => !prev);
+    };
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleProfile = () => {
+        navigate('/profile');
+        handleMenuClose();
     };
 
     const drawer = (
@@ -91,17 +113,17 @@ function TopBar(props) {
             <Toolbar><img src="https://sts.cs.illinois.edu/assets/themes/lab/images/logo/lab-logo.png" className="h-8" alt="Flowbite Logo" /></Toolbar>
             <Divider />
             <List>
-                {['Profile', 'Dashboard'].map((text) => (
+                {['Dashboard',  ...(roleName === 'admin' ? ['Users'] : [])].map((text) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={() => {
-                            if (text === 'Profile') {
-                                navigate('/profile');
+                            if (text === 'Users') {
+                                navigate('/users');
                             } else if (text === 'Dashboard') {
                                 navigate('/login');
                             }
                         }}>
                             <ListItemIcon>
-                                {text === 'Profile' ? <AccountCircleIcon /> : <SpaceDashboardIcon />}
+                                {text === 'Dashboard' ? <SpaceDashboardIcon /> : <PeopleAltSharpIcon />}
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -151,10 +173,8 @@ function TopBar(props) {
                         Threat Detection Dashboard
                     </Typography>
 
-
                     <div
                         className={`${notificationList.length > 0 ? 'active' : ''}`}
-                        onClick={handleNotificationsClick}
                         style={{ position: 'relative', cursor: 'pointer' }}
                     >
                         <IconButton
@@ -164,50 +184,82 @@ function TopBar(props) {
                             sx={{ mr: 2 }}
                         >
                             <NotificationsIcon />
+                            {notificationList.length > 0 && (
+                                <span className="notification-count">{notificationList.length}</span>
+                            )}
                         </IconButton>
-                        {notificationList.length > 0 && (
-                            <span className="notification-count">{notificationList.length}</span>
-                        )}
+                        {notificationsOpen && (
+                            <div className="notification-dropdown" style={{
+                                position: 'absolute',
+                                top: '50px',
+                                right: '0',
+                                backgroundColor: 'white',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                                zIndex: 1000,
+                                width: '200px'
+                            }}>
+                                <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
+                                {notificationList.length === 0 ? (
+                                    <p style={{ color: 'black' }}>No new alerts</p>
+                                ) : (
+                                    <ul>
+                                        {notificationList.map((alert, index) => (
+                                            <li key={index}>
+                                                <p style={{ color: 'black' }}>{alert.name} - {alert.severity}</p>
+                                                <button
+                                                    className="clear-alert-button"
+                                                    onClick={() => clearAlert(index)}
+                                                >
+                                                    Clear
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                {notificationList.length > 0 && (
+                                    <button className="clear-all-button" onClick={clearAllAlerts}>
+                                        Clear All
+                                    </button>
+                                )}
+                            </div>
+                    )}
                     </div>
 
-
-
-                    {notificationsOpen && (
-                        <div className="notification-dropdown">
-                            <h2 style={{ color: 'black' }}><b>New Alerts</b></h2>
-                            {notificationList.length === 0 ? (
-                                <p style={{ color: 'black' }}>No new alerts</p>
-                            ) : (
-                                <ul>
-                                    {notificationList.map((alert, index) => (
-                                        <li key={index}>
-                                            <p style={{ color: 'black' }}>{alert.name} - {alert.severity}</p>
-                                            <button
-                                                className="clear-alert-button"
-                                                onClick={() => clearAlert(index)}
-                                            >
-                                                Clear
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                            {notificationList.length > 0 && (
-                                <button className="clear-all-button" onClick={clearAllAlerts}>
-                                    Clear All
-                                </button>
-                            )}
-                        </div>
-
-                    )}
                     <IconButton
                         color="inherit"
                         edge="end"
-                        onClick={handleLogout}
-                        sx={{ mr: 2, ml: 0 }}
+                        onClick={handleMenuClick}
+                        sx={{ ml: 2 }}
                     >
-                        <LogoutIcon />
+                        <AccountCircleIcon />
                     </IconButton>
+
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                            style: {
+                                width: '200px', // Adjust the width as needed
+                            },
+                        }}
+                    >
+                         <MenuItem
+                            disabled
+                            style={{
+                                height: '50px',
+                                color: 'black',
+                                opacity: 0.9
+                            }}
+                        >
+                            Hi, {username}
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </Menu>
                 </Toolbar>
             </AppBar>
             <Box
@@ -247,6 +299,5 @@ TopBar.propTypes = {
     alerts: PropTypes.array,
     setAuth: PropTypes.func,
 };
-
 
 export default TopBar;

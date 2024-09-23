@@ -2,3 +2,5 @@
 /security-dashboard/env
 /security-dashboard/package-lock.json
 users.db
+/flask-app/__pycache__
+/flask-app/myenv

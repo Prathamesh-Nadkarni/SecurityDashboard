@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import { encrypt } from '../../utils/crypt';
+import { setJwt } from '../../utils/headers';
+
+
 import CryptoJS from 'crypto-js';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -80,12 +83,14 @@ const LoginPage = ({ setAuth }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-Requested-From': 'React',
           },
           body: JSON.stringify({ username, password: encryptedPassword }),
         });
       }
-
+      
       const data = await response.json();
+      setJwt(data.token);
 
       if (data.success) {
         setAuth(true);
@@ -165,13 +170,14 @@ const LoginPage = ({ setAuth }) => {
     
     {/* Website Functionalities Section */}
   </div>
-{/* 
+
   <div className="functionality-description">
     <h3>Website Functionalities</h3>
     <p>
       Welcome to our website! This platform offers a comprehensive analysis of the threat landscape on your machines, equipping you with an intuitive alerts dashboard that notifies you immediately when a threat is detected. In addition to real-time alerts, you can explore detailed network graphs that facilitate in-depth analysis of threats, enabling users to debug issues and assess their severity.
     </p>
 
+    {/* Images with Arrow Section */}
     <div className="images-section">
       <div className="image-container">
         <img src={Pic1} alt="Pic 1" className="image" />
@@ -188,8 +194,9 @@ const LoginPage = ({ setAuth }) => {
     <p>
       With features like instant filtering and sorting, navigating any node path in a graph becomes effortless. To enhance your security, the website supports two-factor authentication, ensuring that your data remains protected. Join us today and take the first step toward securing your machines!
     </p>
-  </div>*/}
+  </div>
 </div>
+
 
 
   );

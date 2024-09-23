@@ -5,6 +5,7 @@ import Graph from 'react-vis-network-graph';
 import { Rnd } from 'react-rnd';
 import './NetworkPage.css';
 import uuid from 'react-uuid';
+import { setHeaders } from '../../utils/headers';
 
 const NetworkPage = () => {
   const { alertId } = useParams();
@@ -24,7 +25,11 @@ const NetworkPage = () => {
     setEdges([]);
     setLoading(true);
 
-    axios.get(`http://127.0.0.1:5000/api/network/${alertId}`)
+    axios.get(`http://127.0.0.1:5000/api/network/${alertId}`,{
+      headers: {
+        ...setHeaders()
+      }
+    })
       .then(response => {
         const { nodes, edges } = response.data;
         setNodes(nodes);

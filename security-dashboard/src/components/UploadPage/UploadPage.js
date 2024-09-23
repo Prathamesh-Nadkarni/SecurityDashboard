@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UploadPage.css';
 import TopBar from '../Dashboard/TopBar/TopBar';
+import { setHeaders } from '../../utils/headers';
 
 const UploadPage = () => {
   const [file, setFile] = useState(null);
@@ -36,6 +37,9 @@ const UploadPage = () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/api/upload', {
         method: 'POST',
+        headers: {
+          ...setHeaders(),
+        },
         body: formData,
       });
 
