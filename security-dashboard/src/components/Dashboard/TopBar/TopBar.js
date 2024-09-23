@@ -75,11 +75,9 @@ function TopBar(props) {
     };
 
     const handleLogout = () => {
-        setAuth(false);
         localStorage.setItem('auth', 'false');
-        if (location.pathname !== '/login') {
-            navigate('/login',  { replace: true });
-        }
+        navigate('/login');
+
     };
 
     const handleSecondDrawerClick = (index) => {

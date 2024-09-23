@@ -59,7 +59,11 @@ const Dashboard = ({ setAuth }) => {
 }, [setNewAlerts]);
 
   useEffect(() => {
-    fetchAlerts();
+    if(localStorage.getItem('auth') === 'true') {
+      fetchAlerts();
+    } else {
+      handleLogout();
+    }
   }, []);
 
   useEffect(() => {
@@ -86,6 +90,12 @@ const Dashboard = ({ setAuth }) => {
 
   const toggleNotifications = () => {
     setNotificationsOpen(!notificationsOpen);
+  };
+
+  const handleLogout = () => {
+    setAuth(false);
+    localStorage.setItem('auth', 'false'); // Example: Reset auth state
+    navigate('/login');  // Redirect to login page
   };
 
   const clearAlert = (index) => {
